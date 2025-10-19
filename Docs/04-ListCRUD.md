@@ -144,10 +144,16 @@ private var moods: [Mood]
 ### Update (U)
 ```swift
 func saveEdit() {
-    guard let mood = editingMood else { return }
+    // Trim and validate label
+    let trimmedLabel = moodLabel.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard let mood = editingMood, !trimmedLabel.isEmpty else { return }
+    
+    // Update model properties with trimmed label
     mood.emoji = selectedEmoji
-    mood.label = moodLabel
-    mood.timestamp = Date()
+    mood.label = trimmedLabel
+    mood.timestamp = Date() // Update timestamp to reflect edit
+    
+    // SwiftData tracks changes automatically
     saveContext()
 }
 ```

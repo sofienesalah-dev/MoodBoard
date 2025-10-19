@@ -9,6 +9,21 @@
 import SwiftUI
 import SwiftData
 
+/// Wrapper view that constructs the ViewModel with the environment ModelContext
+///
+/// **Architecture Pattern:**
+/// This wrapper eliminates the need for optional ViewModel and nil checks
+/// by constructing a non-optional ViewModel before passing to content view.
+struct CRUDListView: View {
+    
+    /// SwiftData environment context (injected by SwiftUI)
+    @Environment(\.modelContext) private var modelContext
+    
+    var body: some View {
+        CRUDListContentView(viewModel: CRUDViewModel(modelContext: modelContext))
+    }
+}
+
 /// Main view demonstrating complete CRUD operations with SwiftData
 ///
 /// **Key Concepts:**
@@ -27,12 +42,9 @@ import SwiftData
 /// - Android: RecyclerView + ViewModel + Room
 /// - React: List components + useState + Context
 /// - Vue.js: v-for + reactive refs + Pinia store
-struct CRUDListView: View {
+private struct CRUDListContentView: View {
     
     // MARK: - Dependencies
-    
-    /// SwiftData environment context (injected by SwiftUI)
-    @Environment(\.modelContext) private var modelContext
     
     /// Query all moods from SwiftData (sorted by timestamp, newest first)
     /// @Query is reactive: UI updates automatically when data changes
@@ -42,8 +54,8 @@ struct CRUDListView: View {
     // MARK: - ViewModel
     
     /// ViewModel managing all CRUD business logic
-    /// Initialized lazily in .task to ensure correct ModelContext
-    @State private var viewModel: CRUDViewModel?
+    /// Non-optional, constructed by parent wrapper with correct ModelContext
+    @Bindable var viewModel: CRUDViewModel
     
     // MARK: - UI State
     
@@ -70,11 +82,9 @@ struct CRUDListView: View {
         }
         .sheet(isPresented: $isShowingSheet) {
             // Sheet dismissed: cancel any pending edit
-            viewModel?.cancelEdit()
+            viewModel.cancelEdit()
         } content: {
-            if let viewModel {
-                AddMoodSheetView(viewModel: viewModel)
-            }
+            AddMoodSheetView(viewModel: viewModel)
         }
         .confirmationDialog(
             "Are you sure you want to delete all moods?",
@@ -83,19 +93,12 @@ struct CRUDListView: View {
         ) {
             Button("Delete All", role: .destructive) {
                 withAnimation {
-                    viewModel?.clearAllMoods(moods)
+                    viewModel.clearAllMoods(moods)
                 }
             }
             Button("Cancel", role: .cancel) {}
         } message: {
             Text("This action cannot be undone.")
-        }
-        .task {
-            // Initialize ViewModel with the actual ModelContext from environment
-            // This ensures we use the correct persistence context
-            if viewModel == nil {
-                viewModel = CRUDViewModel(modelContext: modelContext)
-            }
         }
     }
     
@@ -107,12 +110,11 @@ struct CRUDListView: View {
         // Add button
         ToolbarItem(placement: .topBarTrailing) {
             Button {
-                viewModel?.cancelEdit() // Ensure clean state
+                viewModel.cancelEdit() // Ensure clean state
                 isShowingSheet = true
             } label: {
                 Image(systemName: "plus.circle.fill")
             }
-            .disabled(viewModel == nil) // Disable until ViewModel is ready
             .accessibilityLabel("Add new mood")
             .accessibilityHint("Opens a sheet to create a new mood entry")
         }
@@ -125,7 +127,6 @@ struct CRUDListView: View {
                 } label: {
                     Text("Clear All")
                 }
-                .disabled(viewModel == nil) // Disable until ViewModel is ready
                 .tint(.red)
                 .accessibilityLabel("Clear all moods")
                 .accessibilityHint("Deletes all mood entries from the list")
@@ -141,14 +142,12 @@ struct CRUDListView: View {
             Text("Tap **+** to add your first mood")
         } actions: {
             Button {
-                guard let viewModel else { return }
                 viewModel.cancelEdit()
                 isShowingSheet = true
             } label: {
                 Text("Add Mood")
             }
             .buttonStyle(.borderedProminent)
-            .disabled(viewModel == nil)
         }
     }
     
@@ -160,39 +159,30 @@ struct CRUDListView: View {
                     CRUDMoodRowView(mood: mood)
                         .contentShape(Rectangle()) // Make entire row tappable
                         .onTapGesture {
-                            // Tap to edit (only if ViewModel is ready)
-                            guard let viewModel else { return }
+                            // Tap to edit
                             viewModel.startEditing(mood)
                             isShowingSheet = true
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            // Delete action
+                            // Delete action (consolidated - single deletion path)
                             Button(role: .destructive) {
                                 withAnimation {
-                                    viewModel?.deleteMood(mood)
+                                    viewModel.deleteMood(mood)
                                 }
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
-                            .disabled(viewModel == nil)
                         }
                         .swipeActions(edge: .leading, allowsFullSwipe: false) {
                             // Edit action
                             Button {
-                                guard let viewModel else { return }
                                 viewModel.startEditing(mood)
                                 isShowingSheet = true
                             } label: {
                                 Label("Edit", systemImage: "pencil")
                             }
                             .tint(.blue)
-                            .disabled(viewModel == nil)
                         }
-                }
-                .onDelete { offsets in
-                    withAnimation {
-                        viewModel?.deleteMoods(at: offsets, from: moods)
-                    }
                 }
             } header: {
                 Text("My Moods (\(moods.count))")
