@@ -73,11 +73,9 @@ struct ArchitectureView: View {
         .navigationTitle("Architecture")
         .navigationBarTitleDisplayMode(.large)
         .task {
-            // Initialize ViewModel once with ModelContext
-            // .task ensures single initialization per view lifecycle
-            if viewModel == nil {
-                viewModel = MoodViewModel(modelContext: modelContext)
-            }
+            // Initialize ViewModel with ModelContext
+            // .task runs once per view lifecycle (no need for nil check)
+            viewModel = MoodViewModel(modelContext: modelContext)
         }
     }
     

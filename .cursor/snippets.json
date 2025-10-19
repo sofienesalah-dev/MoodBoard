@@ -55,6 +55,8 @@
       "- **🔧 Components**: Use unique component names per feature to avoid redeclaration conflicts",
       "- **🧠 MVVM**: Always separate business logic into ViewModels (NO logic in Views!)",
       "- **💉 DI**: Inject dependencies (like ModelContext) into ViewModels, not direct in Views",
+      "- **📋 Logging**: Use conditional compilation (#if DEBUG) for print statements, add TODO for production logging",
+      "- **⏱️ Lifecycle**: Use .task instead of .onAppear for async initialization (runs once per view lifecycle)",
       "",
       "---",
       "",

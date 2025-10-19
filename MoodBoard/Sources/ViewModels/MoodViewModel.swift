@@ -74,7 +74,11 @@ final class MoodViewModel {
         do {
             try modelContext.save()
         } catch {
-            print("⚠️ Failed to save new mood: \(error.localizedDescription)")
+            // TODO: Replace with proper logging framework in production (e.g., OSLog)
+            #if DEBUG
+            print("⚠️ [MoodViewModel] Failed to save mood: \(error.localizedDescription)")
+            #endif
+            // In production, consider: Logger.shared.error("Failed to save mood", error: error)
         }
     }
     
