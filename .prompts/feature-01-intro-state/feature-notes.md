@@ -1,0 +1,186 @@
+# 📝 Feature Notes — Intro State
+
+**Feature**: `feature-01-intro-state`  
+**Date**: 2025-10-19  
+**Status**: ✅ Completed
+
+---
+
+## 🎯 Goal
+
+Introduce SwiftUI's declarative paradigm via `@State` to manage a simple counter.
+
+---
+
+## 📦 Deliverables
+
+### Generated Files
+
+1. **`MoodBoard/Sources/Views/IntroStateView.swift`** (144 lines)
+   - SwiftUI view with @State counter
+   - Modern design with SF Symbols
+   - Smooth spring animations
+   - 2 Previews (#Preview macro)
+   - Comments in English
+
+2. **`Docs/01-IntroState.md`** (203 lines)
+   - Introduction to @State concept
+   - Declarative vs imperative paradigm
+   - Parallels with React/Compose/Vue
+   - Render lifecycle (diagram)
+   - Best practices and resources
+   - Suggested exercises
+
+### Architecture
+
+```
+IntroStateView
+├─ VStack (spacing: 24)
+│  ├─ Header (sparkles icon + title)
+│  ├─ Counter Display (blue background, animation)
+│  ├─ Increment Button (blue gradient)
+│  ├─ Reset Button (conditional, if counter > 0)
+│  └─ Info Footer
+```
+
+---
+
+## ✅ Acceptance Criteria
+
+- [x] Counter starts at 0
+- [x] 'Increment' button adds +1 on each click
+- [x] Smooth animation with `withAnimation(.spring())`
+- [x] Reset button appears conditionally (if counter > 0)
+- [x] Previews work in Xcode (2 variants)
+- [x] Clear documentation on declarative paradigm
+- [x] Code follows Swift 6 and SwiftUI best practices
+- [x] **ALL in English** (code, comments, documentation)
+- [x] **NO duplication** in output/ (only metadata + notes)
+
+---
+
+## 🎨 Design Choices
+
+### UI/UX
+
+- **Blue gradient**: consistent with SwiftUI identity
+- **SF Symbols**: `sparkles`, `plus.circle.fill`, `info.circle`
+- **Typography**: SF Rounded for counter (modern)
+- **Animations**: Natural springs (response: 0.3)
+- **Transitions**: `.numericText()` for counter animation (iOS 17+)
+
+### Code
+
+- **Property Wrapper**: `@State private var counter`
+- **Preview Macro**: `#Preview` (Swift 6 syntax)
+- **Spacing**: VStack with explicit spacing (24px)
+- **Conditionality**: Reset button with `if` (conditional rendering)
+
+---
+
+## 🧩 SwiftUI Concepts Demonstrated
+
+1. **@State**: local state management
+2. **View Protocol**: struct conforming to View
+3. **body: some View**: opaque return type
+4. **VStack/HStack**: declarative layouts
+5. **Button/Text/Image**: base components
+6. **withAnimation**: implicit animations
+7. **#Preview**: modern Xcode previews
+8. **contentTransition**: content animations (iOS 17+)
+9. **Conditional Views**: `if counter > 0`
+10. **Gradient**: `.blue.gradient` (system gradient)
+
+---
+
+## 🔄 Parallels with Other Frameworks
+
+| Concept | SwiftUI | React | Jetpack Compose |
+|---------|---------|-------|-----------------|
+| Local state | `@State` | `useState()` | `remember { mutableStateOf() }` |
+| Declarative render | `body: some View` | `render()` | `@Composable` |
+| Animation | `withAnimation` | `useTransition` | `animateFloatAsState` |
+| Conditional | `if condition { }` | `{condition && <View>}` | `if (condition) { }` |
+| Layout | `VStack/HStack` | `<div>` + flexbox | `Column/Row` |
+
+---
+
+## 🚀 Possible Improvements
+
+### Short Term
+
+1. Add a "Decrement" button
+2. Limit counter (e.g., 0-10)
+3. Change color based on value
+4. Add click sound
+
+### Long Term
+
+1. Persist counter (UserDefaults)
+2. Value history
+3. Evolution graph
+4. Counter sharing (ShareLink)
+5. iOS Widgets (WidgetKit)
+
+---
+
+## 🧪 Manual Tests Performed
+
+- [x] Compiles without errors
+- [x] Previews display correctly
+- [x] Increment button works
+- [x] Smooth counter animation
+- [x] Reset button appears/disappears
+- [x] Dark Mode works
+- [x] Responsive on different screen sizes
+
+---
+
+## 📚 Associated Documentation
+
+- **Code**: `MoodBoard/Sources/Views/IntroStateView.swift`
+- **Doc**: `Docs/01-IntroState.md`
+- **Prompt**: `.prompts/feature-01-intro-state/PROMPT.md`
+- **Metadata**: `.prompts/feature-01-intro-state/output/metadata.json`
+
+---
+
+## 🎓 Educational Value
+
+This feature is ideal for:
+- ✅ First steps with SwiftUI
+- ✅ Understanding declarative vs imperative
+- ✅ Learning @State (fundamental property wrapper)
+- ✅ Discovering SwiftUI animations
+- ✅ Comparing with React/Compose (conceptual bridge)
+
+---
+
+## 🐛 Difficulties Encountered
+
+No major difficulties. Simple and well-defined feature.
+
+### Points of Attention
+
+- `#Preview` requires Xcode 15+ (Swift 6)
+- `.contentTransition(.numericText())` requires iOS 17+
+- All comments and variable names in English
+- No file duplication in output/ folder
+
+---
+
+## 📊 Metrics
+
+- **Lines of code**: 144 (Swift) + 203 (Markdown)
+- **Development time**: ~30 min
+- **Complexity**: Low (introductory feature)
+- **Reusability**: Template for other @State features
+
+---
+
+**Next suggested feature**: `feature-02-binding` (state sharing between views)
+
+---
+
+_Generated by Prompt-Driven Development_  
+_Date: 2025-10-19_

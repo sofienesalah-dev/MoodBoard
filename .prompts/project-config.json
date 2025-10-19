@@ -1,0 +1,31 @@
+{
+  "project": {
+    "name": "MoodBoard",
+    "description": "Prompt-Driven Development demonstration with SwiftUI",
+    "stack": "iOS 17+, Swift 6, SwiftUI",
+    "structure": ["Sources/", "Docs/", ".prompts/", "scripts/"]
+  },
+  "current_feature": {
+    "FEATURE_SLUG": "feature-01-intro-state",
+    "FEATURE_TITLE": "Intro State",
+    "FEATURE_DATE": "2025-10-19",
+    "FEATURE_OBJECTIVE": "Introduce SwiftUI's declarative paradigm via @State to manage a counter.",
+    "FEATURE_FILES": [
+      "MoodBoard/Sources/Views/IntroStateView.swift",
+      "Docs/01-IntroState.md"
+    ],
+    "FEATURE_SPECIFICATIONS": "IntroStateView with @State counter and Increment button, associated pedagogical documentation.",
+    "FEATURE_ACCEPTANCE": [
+      "Counter starts at 0",
+      "Increment button adds +1",
+      "Previews work in Xcode",
+      "Clear documentation on declarative paradigm"
+    ]
+  },
+  "conventions": {
+    "feature_pattern": "one feature = one Git branch = one .prompts/feature-xx-* folder",
+    "documentation": "Each feature is documented in Docs/",
+    "archiving": "Prompts are archived after execution in .prompts/feature-xx-*/output/"
+  }
+}
+
