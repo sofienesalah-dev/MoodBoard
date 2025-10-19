@@ -74,7 +74,7 @@ struct ArchitectureView: View {
         .navigationBarTitleDisplayMode(.large)
         .task {
             // Initialize ViewModel with ModelContext
-            // .task runs once per view lifecycle (no need for nil check)
+            // .task runs once per view lifecycle; viewModel is set here, but may be nil before this runs
             viewModel = MoodViewModel(modelContext: modelContext)
         }
     }
