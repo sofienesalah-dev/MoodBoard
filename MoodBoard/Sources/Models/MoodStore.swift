@@ -8,11 +8,14 @@
 
 import SwiftUI
 
-/// Model representing a mood entry
+/// Model representing a mood entry (Feature 02 - In-memory only)
 ///
 /// Simple struct to represent a user's mood at a given moment.
 /// Conforms to Identifiable for use in SwiftUI ForEach loops.
-struct Mood: Identifiable {
+///
+/// **Note**: This is the in-memory version for Feature 02 (@Observable demo).
+/// For persistent storage with SwiftData, see `Mood` class in Feature 03.
+struct MoodEntry: Identifiable {
     let id = UUID()
     var emoji: String
     var label: String
@@ -36,9 +39,9 @@ class MoodStore {
     
     // MARK: - Properties
     
-    /// List of moods
+    /// List of mood entries
     /// No need for @Published - @Observable tracks all properties automatically!
-    var moods: [Mood] = []
+    var moods: [MoodEntry] = []
     
     // MARK: - Actions
     
@@ -47,7 +50,7 @@ class MoodStore {
     ///   - emoji: The emoji representing the mood
     ///   - label: A text description of the mood
     func addMood(emoji: String, label: String) {
-        let newMood = Mood(emoji: emoji, label: label)
+        let newMood = MoodEntry(emoji: emoji, label: label)
         moods.append(newMood)
     }
     
@@ -68,9 +71,9 @@ class MoodStore {
     static var sample: MoodStore {
         let store = MoodStore()
         store.moods = [
-            Mood(emoji: "😊", label: "Happy"),
-            Mood(emoji: "🎉", label: "Excited"),
-            Mood(emoji: "😴", label: "Tired")
+            MoodEntry(emoji: "😊", label: "Happy"),
+            MoodEntry(emoji: "🎉", label: "Excited"),
+            MoodEntry(emoji: "😴", label: "Tired")
         ]
         return store
     }
