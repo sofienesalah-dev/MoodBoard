@@ -153,7 +153,66 @@ git checkout -b feature/{{FEATURE_SLUG}}
 
 ---
 
-**Exécute ces instructions maintenant.**  
-Génère le code, la documentation, et archive tout dans `.prompts/{{FEATURE_SLUG}}/output/`.  
-Termine par un résumé de ce qui a été créé et validé.
+## 🔄 PR & REVIEW WORKFLOW
+
+After generating the code:
+
+### 1. Create Feature Branch
+```bash
+git checkout -b feature/{{FEATURE_NUMBER}}-{{FEATURE_SHORT_NAME}}
+```
+
+### 2. Commit & Push
+```bash
+git add -A
+git commit -m "feat({{FEATURE_SLUG}}): {{FEATURE_TITLE}}
+
+- Implementation details
+- Navigation integration
+- Documentation"
+git push origin feature/{{FEATURE_NUMBER}}-{{FEATURE_SHORT_NAME}}
+```
+
+### 3. Open Pull Request on GitHub
+- Title: `feat({{FEATURE_SLUG}}): {{FEATURE_TITLE}}`
+- Description template:
+  ```markdown
+  ## Feature {{FEATURE_NUMBER}}: {{FEATURE_TITLE}}
+  
+  ### Objective
+  {{FEATURE_OBJECTIVE}}
+  
+  ### Changes
+  - New view: `{{VIEW_NAME}}`
+  - Navigation integration in FeaturesListView
+  - Documentation: `Docs/{{DOC_FILE}}.md`
+  
+  ### Testing
+  1. Build and run the app
+  2. Navigate to Feature {{FEATURE_NUMBER}}
+  3. Verify functionality
+  
+  ### Acceptance Criteria
+  {{FEATURE_ACCEPTANCE}}
+  
+  ### Copilot Review
+  @copilot review
+  ```
+
+### 4. Use Copilot Reviewer
+- Comment `@copilot review` on the PR
+- Wait for automated code review
+- Address any feedback
+- Request re-review if needed
+
+### 5. Merge
+- After approval and CI passes
+- Squash and merge to `main`
+- Delete feature branch
+
+---
+
+**Execute these instructions now.**  
+Generate code, documentation, and archive everything in `.prompts/{{FEATURE_SLUG}}/output/`.  
+End with a summary of what was created and validated.
 
