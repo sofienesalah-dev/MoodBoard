@@ -171,8 +171,9 @@ final class CRUDViewModel {
     // MARK: - Computed Properties
     
     /// Check if the form is valid for submission
+    /// Trims whitespace to ensure labels with only spaces are invalid
     var isFormValid: Bool {
-        !moodLabel.isEmpty
+        !moodLabel.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
     
     /// Check if currently in editing mode

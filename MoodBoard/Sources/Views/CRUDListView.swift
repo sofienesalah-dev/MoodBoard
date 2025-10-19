@@ -42,22 +42,13 @@ struct CRUDListView: View {
     // MARK: - ViewModel
     
     /// ViewModel managing all CRUD business logic
-    /// Initialized directly to ensure it's always available
-    @State private var viewModel: CRUDViewModel
+    /// Initialized lazily in .task to ensure correct ModelContext
+    @State private var viewModel: CRUDViewModel?
     
     // MARK: - UI State
     
     /// Controls sheet presentation for add/edit
     @State private var isShowingSheet = false
-    
-    // MARK: - Initializer
-    
-    init() {
-        // Create a temporary context for initialization
-        // The actual context will be injected via .task
-        let tempContext = ModelContext(ModelContainer.preview)
-        _viewModel = State(initialValue: CRUDViewModel(modelContext: tempContext))
-    }
     
     // MARK: - Body
     
@@ -76,14 +67,18 @@ struct CRUDListView: View {
         }
         .sheet(isPresented: $isShowingSheet) {
             // Sheet dismissed: cancel any pending edit
-            viewModel.cancelEdit()
+            viewModel?.cancelEdit()
         } content: {
-            AddMoodSheetView(viewModel: viewModel, isPresented: $isShowingSheet)
+            if let viewModel {
+                AddMoodSheetView(viewModel: viewModel)
+            }
         }
         .task {
-            // Re-initialize ViewModel with the actual ModelContext from environment
-            // This ensures we use the correct context for the app
-            viewModel = CRUDViewModel(modelContext: modelContext)
+            // Initialize ViewModel with the actual ModelContext from environment
+            // This ensures we use the correct persistence context
+            if viewModel == nil {
+                viewModel = CRUDViewModel(modelContext: modelContext)
+            }
         }
     }
     
@@ -95,11 +90,12 @@ struct CRUDListView: View {
         // Add button
         ToolbarItem(placement: .topBarTrailing) {
             Button {
-                viewModel.cancelEdit() // Ensure clean state
+                viewModel?.cancelEdit() // Ensure clean state
                 isShowingSheet = true
             } label: {
                 Image(systemName: "plus.circle.fill")
             }
+            .disabled(viewModel == nil) // Disable until ViewModel is ready
             .accessibilityLabel("Add new mood")
             .accessibilityHint("Opens a sheet to create a new mood entry")
         }
@@ -109,12 +105,13 @@ struct CRUDListView: View {
             ToolbarItem(placement: .topBarLeading) {
                 Button {
                     withAnimation {
-                        viewModel.clearAllMoods(moods)
+                        viewModel?.clearAllMoods(moods)
                     }
                 } label: {
                     Text("Clear All")
                 }
-                .foregroundStyle(.red)
+                .disabled(viewModel == nil) // Disable until ViewModel is ready
+                .tint(.red)
                 .accessibilityLabel("Clear all moods")
                 .accessibilityHint("Deletes all mood entries from the list")
             }
@@ -145,7 +142,8 @@ struct CRUDListView: View {
                     CRUDMoodRowView(mood: mood)
                         .contentShape(Rectangle()) // Make entire row tappable
                         .onTapGesture {
-                            // Tap to edit
+                            // Tap to edit (only if ViewModel is ready)
+                            guard let viewModel else { return }
                             viewModel.startEditing(mood)
                             isShowingSheet = true
                         }
@@ -153,26 +151,29 @@ struct CRUDListView: View {
                             // Delete action
                             Button(role: .destructive) {
                                 withAnimation {
-                                    viewModel.deleteMood(mood)
+                                    viewModel?.deleteMood(mood)
                                 }
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
+                            .disabled(viewModel == nil)
                         }
                         .swipeActions(edge: .leading, allowsFullSwipe: false) {
                             // Edit action
                             Button {
+                                guard let viewModel else { return }
                                 viewModel.startEditing(mood)
                                 isShowingSheet = true
                             } label: {
                                 Label("Edit", systemImage: "pencil")
                             }
                             .tint(.blue)
+                            .disabled(viewModel == nil)
                         }
                 }
                 .onDelete { offsets in
                     withAnimation {
-                        viewModel.deleteMoods(at: offsets, from: moods)
+                        viewModel?.deleteMoods(at: offsets, from: moods)
                     }
                 }
             } header: {

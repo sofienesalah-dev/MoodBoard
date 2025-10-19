@@ -84,7 +84,7 @@
       "name": "CRUDListView",
       "pattern": "SwiftUI View",
       "data_source": "@Query",
-      "interactions": ["tap_to_edit", "swipe_to_delete", "pull_to_refresh"]
+      "interactions": ["tap_to_edit", "swipe_to_delete"]
     },
     "modal": {
       "name": "AddMoodSheetView",

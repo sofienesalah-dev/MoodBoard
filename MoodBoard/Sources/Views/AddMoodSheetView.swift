@@ -28,9 +28,6 @@ struct AddMoodSheetView: View {
     /// Injected from parent view
     let viewModel: CRUDViewModel
     
-    /// Binding to control sheet presentation
-    @Binding var isPresented: Bool
-    
     /// Environment dismiss action
     @Environment(\.dismiss) private var dismiss
     
@@ -142,33 +139,27 @@ struct AddMoodSheetView: View {
 // MARK: - Previews
 
 #Preview("Add Mood") {
-    @Previewable @State var isPresented = true
-    
     let container = ModelContainer.preview
     let viewModel = CRUDViewModel(modelContext: container.mainContext)
     
-    AddMoodSheetView(viewModel: viewModel, isPresented: $isPresented)
+    AddMoodSheetView(viewModel: viewModel)
 }
 
 #Preview("Edit Mood") {
-    @Previewable @State var isPresented = true
-    
     let container = ModelContainer.preview
     let viewModel = CRUDViewModel(modelContext: container.mainContext)
     
     // Simulate editing by starting with first sample mood
     let _ = Mood.samples.first.map { viewModel.startEditing($0) }
     
-    AddMoodSheetView(viewModel: viewModel, isPresented: $isPresented)
+    AddMoodSheetView(viewModel: viewModel)
 }
 
 #Preview("Add Mood - Dark Mode") {
-    @Previewable @State var isPresented = true
-    
     let container = ModelContainer.preview
     let viewModel = CRUDViewModel(modelContext: container.mainContext)
     
-    AddMoodSheetView(viewModel: viewModel, isPresented: $isPresented)
+    AddMoodSheetView(viewModel: viewModel)
         .preferredColorScheme(.dark)
 }
 
