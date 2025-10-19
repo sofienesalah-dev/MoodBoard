@@ -36,9 +36,26 @@ struct FeaturesListView: View {
                     Text("SwiftUI Fundamentals")
                 }
                 
+                // Feature 02: @Observable
+                Section {
+                    NavigationLink {
+                        MoodListView()
+                    } label: {
+                        FeatureRowView(
+                            number: "02",
+                            title: "Observation",
+                            description: "Modern state management with @Observable & @Bindable",
+                            icon: "brain.head.profile",
+                            color: .purple
+                        )
+                    }
+                } header: {
+                    Text("State Management")
+                }
+                
                 // Future features will be added here
-                // Feature 02: @Binding
-                // Feature 03: @ObservableObject
+                // Feature 03: @Binding
+                // Feature 04: @Environment
                 // etc.
             }
             .navigationTitle("MoodBoard Features")
