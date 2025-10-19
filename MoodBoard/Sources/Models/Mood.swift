@@ -74,14 +74,8 @@ extension Mood {
     /// Insert sample moods into a given ModelContext
     /// - Parameter context: The ModelContext to insert sample data into
     static func insertSamples(into context: ModelContext) {
-        let sampleMoods = [
-            Mood(emoji: "😊", label: "Happy", timestamp: Date().addingTimeInterval(-3600)),
-            Mood(emoji: "🎉", label: "Excited", timestamp: Date().addingTimeInterval(-7200)),
-            Mood(emoji: "😴", label: "Tired", timestamp: Date().addingTimeInterval(-10800)),
-            Mood(emoji: "🤔", label: "Thoughtful", timestamp: Date().addingTimeInterval(-14400))
-        ]
-        
-        for mood in sampleMoods {
+        // Reuse the samples property to avoid duplication
+        for mood in samples {
             context.insert(mood)
         }
     }

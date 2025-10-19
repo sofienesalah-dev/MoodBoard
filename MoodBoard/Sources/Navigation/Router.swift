@@ -45,7 +45,7 @@ enum Route: Hashable {
     
     /// Detail view for a specific mood (by ID)
     /// Note: Using String for PersistentIdentifier URIRepresentation for Hashable conformance
-    case moodDetail(idString: String)
+    case moodDetail(moodURIString: String)
     
     // Future routes can be added here
     // case settings

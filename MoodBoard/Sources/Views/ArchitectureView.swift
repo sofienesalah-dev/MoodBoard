@@ -46,10 +46,8 @@ struct ArchitectureView: View {
     /// ViewModel managing business logic
     /// All actions (Create, Delete, etc.) go through this ViewModel
     /// **This separates UI from business logic!**
-    /// Initialized on first access with the ModelContext
-    private var viewModel: MoodViewModel {
-        MoodViewModel(modelContext: modelContext)
-    }
+    /// Uses @State to maintain a single instance throughout view lifecycle
+    @State private var viewModel: MoodViewModel?
     
     // MARK: - Body
     
@@ -61,15 +59,26 @@ struct ArchitectureView: View {
             Divider()
             
             // Form to add new moods
-            addMoodSection(viewModel: viewModel)
+            if let viewModel {
+                addMoodSection(viewModel: viewModel)
+            }
             
             Divider()
             
             // List of persisted moods
-            moodsListSection(viewModel: viewModel)
+            if let viewModel {
+                moodsListSection(viewModel: viewModel)
+            }
         }
         .navigationTitle("Architecture")
         .navigationBarTitleDisplayMode(.large)
+        .task {
+            // Initialize ViewModel once with ModelContext
+            // .task ensures single initialization per view lifecycle
+            if viewModel == nil {
+                viewModel = MoodViewModel(modelContext: modelContext)
+            }
+        }
     }
     
     // MARK: - Subviews
