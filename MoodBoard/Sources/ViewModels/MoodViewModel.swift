@@ -70,8 +70,12 @@ final class MoodViewModel {
         // Reset form (UI state management)
         moodLabel = ""
         
-        // Explicit save (optional, SwiftData auto-saves)
-        try? modelContext.save()
+        // Explicit save (SwiftData auto-saves, but we ensure it)
+        do {
+            try modelContext.save()
+        } catch {
+            print("⚠️ Failed to save new mood: \(error.localizedDescription)")
+        }
     }
     
     /// Delete moods at specific indices

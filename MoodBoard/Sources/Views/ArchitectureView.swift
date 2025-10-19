@@ -46,7 +46,10 @@ struct ArchitectureView: View {
     /// ViewModel managing business logic
     /// All actions (Create, Delete, etc.) go through this ViewModel
     /// **This separates UI from business logic!**
-    @State private var viewModel: MoodViewModel?
+    /// Initialized on first access with the ModelContext
+    private var viewModel: MoodViewModel {
+        MoodViewModel(modelContext: modelContext)
+    }
     
     // MARK: - Body
     
@@ -58,26 +61,15 @@ struct ArchitectureView: View {
             Divider()
             
             // Form to add new moods
-            if let viewModel {
-                addMoodSection(viewModel: viewModel)
-            }
+            addMoodSection(viewModel: viewModel)
             
             Divider()
             
             // List of persisted moods
-            if let viewModel {
-                moodsListSection(viewModel: viewModel)
-            }
+            moodsListSection(viewModel: viewModel)
         }
         .navigationTitle("Architecture")
         .navigationBarTitleDisplayMode(.large)
-        .onAppear {
-            // Initialize ViewModel with ModelContext
-            // This demonstrates dependency injection
-            if viewModel == nil {
-                viewModel = MoodViewModel(modelContext: modelContext)
-            }
-        }
     }
     
     // MARK: - Subviews
