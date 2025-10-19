@@ -53,6 +53,8 @@
       "- **⚠️ Naming**: Avoid model name conflicts (rename existing structs if introducing @Model classes with same name)",
       "- **🧭 Router**: Don't use `@Environment(Router.self)` unless Router is injected in app root (causes crash)",
       "- **🔧 Components**: Use unique component names per feature to avoid redeclaration conflicts",
+      "- **🧠 MVVM**: Always separate business logic into ViewModels (NO logic in Views!)",
+      "- **💉 DI**: Inject dependencies (like ModelContext) into ViewModels, not direct in Views",
       "",
       "---",
       "",

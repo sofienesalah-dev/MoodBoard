@@ -115,31 +115,56 @@ This approach avoids Swift compiler type inference issues when working with Swif
 - Persistent vs in-memory storage
 - Comparison with Room, Core Data, Realm
 
-## 4. ArchitectureView.swift — Demo View
+## 4. MoodViewModel.swift — ViewModel (Business Logic)
+
+**⚠️ IMPORTANT**: Create a proper ViewModel to separate business logic from UI!
+
+Create a ViewModel with `@Observable` that handles:
+- Properties: `selectedEmoji`, `moodLabel`, `availableEmojis`
+- Dependency: `modelContext` (injected via init)
+- Actions: `addMood()`, `deleteMoods()`, `clearAllMoods()`, `selectEmoji()`
+- Validation: `canAddMood` computed property
+
+**Key Concept:**
+- **NO business logic in the View!**
+- All CRUD operations go through the ViewModel
+- Makes Views testable (mock the ViewModel)
+
+**Pedagogical comments** explaining:
+- What is a ViewModel and why separate it
+- Comparison with Android ViewModel, React hooks, Vue Composition API
+- Benefits: testability, reusability, maintainability
+
+## 5. ArchitectureView.swift — View (UI Only)
 
 **⚠️ IMPORTANT**: 
 - Use `ArchitectureMoodRow` for the row component (not `MoodRowView` to avoid conflict with Feature 02)
-- **DO NOT** use `@Environment(Router.self)` in this view - Router is not yet injected in app environment (will cause crash)
+- **DO NOT** use `@Environment(Router.self)` - Router not injected in app environment (will cause crash)
+- **DO NOT** put business logic in the View - delegate everything to ViewModel!
 
-Create a comprehensive demo view with:
-- Header explaining MVVM architecture layers
-- Form to add new moods (emoji picker + text field)
-- List of persisted moods from SwiftData
+Create a View that:
+- Has `@State private var viewModel: MoodViewModel?`
+- Initializes ViewModel in `.onAppear` with dependency injection
+- Delegates ALL actions to ViewModel (no logic in View!)
+- Displays header explaining MVVM architecture layers (Model, ViewModel, View, Storage)
+- Form to add moods (emoji picker + text field) → calls ViewModel
+- List of persisted moods from SwiftData → uses @Query
 - Empty state when no moods exist
-- Delete and clear all actions
+- Delete and clear all actions → calls ViewModel
 
 **Key SwiftUI features:**
-- `@Environment(\.modelContext)` for SwiftData context
-- `@Query(sort: \Mood.timestamp, order: .reverse)` for reactive querying
-- `@State` for local form state
-- Custom `ArchitectureMoodRow` component (to avoid name conflict)
+- `@Environment(\.modelContext)` → passed to ViewModel (dependency injection)
+- `@Query(sort: \Mood.timestamp, order: .reverse)` → reactive data fetching
+- `@State private var viewModel` → holds ViewModel instance
+- Custom `ArchitectureMoodRow` component
 
 **Pedagogical comments** explaining:
-- MVVM layers: Model (@Model), View (SwiftUI), ViewModel (context)
-- @Query for reactive data fetching
-- Comparison with Room + ViewModel + NavHost (Android)
+- Clear MVVM separation: Model (data), ViewModel (logic), View (UI)
+- Why NO business logic in Views
+- Dependency injection pattern
+- Comparison with Android MVVM, React patterns
 
-## 5. FeaturesListView.swift — Navigation Integration
+## 6. FeaturesListView.swift — Navigation Integration
 
 Add new section "Architecture & Navigation" with:
 - NavigationLink to `ArchitectureView()`
@@ -150,7 +175,7 @@ Add new section "Architecture & Navigation" with:
   - icon: "building.columns"
   - color: .orange
 
-## 6. Docs/03-Architecture.md — Documentation
+## 7. Docs/03-Architecture.md — Documentation
 
 Create comprehensive documentation with:
 - Overview of architecture components

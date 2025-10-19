@@ -12,55 +12,41 @@ import SwiftData
 /// Demo view showcasing MVVM architecture with SwiftData and typed navigation
 ///
 /// **Key Concept: MVVM in SwiftUI**
-/// - Model: Mood (@Model with SwiftData)
-/// - View: This view (ArchitectureView)
-/// - ViewModel: Router (@Observable) + SwiftData Context
+/// - **Model**: Mood (@Model with SwiftData) — Data structure
+/// - **View**: This view (ArchitectureView) — UI only, no business logic
+/// - **ViewModel**: MoodViewModel (@Observable) — Business logic & data operations
 ///
-/// **Architecture Layers:**
-/// 1. **Model Layer**: Mood.swift (SwiftData @Model)
-/// 2. **View Layer**: This file (SwiftUI views)
-/// 3. **Navigation**: Router.swift (typed routes)
-/// 4. **Storage**: ModelContainer (SwiftData persistence)
+/// **Clear Separation of Concerns:**
+/// 1. **Model Layer**: Mood.swift (@Model) — What data looks like
+/// 2. **View Layer**: This file — How data is displayed
+/// 3. **ViewModel Layer**: MoodViewModel.swift — How data is manipulated
+/// 4. **Storage Layer**: ModelContainer + ModelContext — Where data is saved
 ///
 /// **Comparison with other frameworks:**
-/// - React: Similar to Container component with Context + Hooks
-/// - Jetpack Compose: Similar to ViewModel + Room + NavHost
-/// - MVVM (Android): Similar structure but SwiftData replaces Room/LiveData
+/// - Android MVVM: View → ViewModel → Repository → Room (same pattern!)
+/// - React: Component → Custom Hook → Context/Redux → API
+/// - Vue.js: Template → Composition API → Store → Backend
 struct ArchitectureView: View {
     
-    // MARK: - SwiftData Environment
+    // MARK: - Dependencies
     
-    /// SwiftData environment context (automatically injected)
-    /// Used to query and manipulate persistent data
+    /// SwiftData environment context (injected by SwiftUI)
+    /// Passed to ViewModel for persistence operations
     @Environment(\.modelContext) private var modelContext
     
-    /// Query all moods from SwiftData, sorted by timestamp (newest first)
+    /// Query all moods from SwiftData (sorted by timestamp)
     /// @Query is reactive: UI updates automatically when data changes
     ///
-    /// **Comparison:**
-    /// - Room: Similar to @Query with Flow<List<Entity>>
-    /// - Core Data: Replaces @FetchRequest
-    /// - Realm: Similar to @ObservedResults
+    /// **This is the "R" in CRUD** (Read)
     @Query(sort: \Mood.timestamp, order: .reverse)
     private var moods: [Mood]
     
-    // MARK: - Navigation
+    // MARK: - ViewModel
     
-    /// Typed router for programmatic navigation
-    /// (For demonstration purposes, not used in this view)
-    /// Note: Commented out to avoid crash - Router not yet injected in app environment
-    // @Environment(Router.self) private var router
-    
-    // MARK: - Local State
-    
-    /// Emoji picker state
-    @State private var selectedEmoji = "😊"
-    
-    /// Mood label text field
-    @State private var moodLabel = ""
-    
-    /// Available mood emojis
-    private let availableEmojis = ["😊", "😢", "😡", "😴", "🤔", "🎉", "😱", "🥰", "😎", "🤯"]
+    /// ViewModel managing business logic
+    /// All actions (Create, Delete, etc.) go through this ViewModel
+    /// **This separates UI from business logic!**
+    @State private var viewModel: MoodViewModel?
     
     // MARK: - Body
     
@@ -72,15 +58,26 @@ struct ArchitectureView: View {
             Divider()
             
             // Form to add new moods
-            addMoodSection
+            if let viewModel {
+                addMoodSection(viewModel: viewModel)
+            }
             
             Divider()
             
             // List of persisted moods
-            moodsListSection
+            if let viewModel {
+                moodsListSection(viewModel: viewModel)
+            }
         }
         .navigationTitle("Architecture")
         .navigationBarTitleDisplayMode(.large)
+        .onAppear {
+            // Initialize ViewModel with ModelContext
+            // This demonstrates dependency injection
+            if viewModel == nil {
+                viewModel = MoodViewModel(modelContext: modelContext)
+            }
+        }
     }
     
     // MARK: - Subviews
@@ -88,51 +85,101 @@ struct ArchitectureView: View {
     /// Header explaining the architecture concepts
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("MVVM + SwiftData")
-                .font(.headline)
-                .foregroundStyle(.primary)
-            
-            Text("This demo showcases a lightweight MVVM architecture with SwiftData for persistence and typed navigation.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-            
-            // Architecture layers
-            VStack(alignment: .leading, spacing: 8) {
-                architectureRow(icon: "cube", title: "Model", detail: "@Model (SwiftData)")
-                architectureRow(icon: "eye", title: "View", detail: "SwiftUI + @Query")
-                architectureRow(icon: "arrow.triangle.branch", title: "Navigation", detail: "Router (typed routes)")
-                architectureRow(icon: "cylinder", title: "Storage", detail: "ModelContainer")
+            // Title and main explanation
+            VStack(alignment: .leading, spacing: 4) {
+                Text("🏗️ Architecture Demo")
+                    .font(.title3)
+                    .fontWeight(.bold)
+                
+                Text("What you'll see:")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                
+                VStack(alignment: .leading, spacing: 3) {
+                    bulletPoint("Data persists (SwiftData)")
+                    bulletPoint("CRUD: Create, Read, Delete")
+                    bulletPoint("Reactive UI (@Query)")
+                }
+                .font(.caption)
+                .padding(.leading, 4)
             }
-            .padding(.top, 8)
+            
+            Divider()
+            
+            // Architecture layers explanation
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Architecture Layers")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    architectureRow(icon: "cube", title: "Model", detail: "Mood.swift — @Model")
+                    architectureRow(icon: "brain", title: "ViewModel", detail: "Business logic")
+                    architectureRow(icon: "eye", title: "View", detail: "UI only")
+                    architectureRow(icon: "cylinder", title: "Storage", detail: "Persistence")
+                }
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
-        .background(Color.blue.opacity(0.1))
+        .padding(.horizontal)
+        .padding(.vertical, 12)
+        .background(
+            LinearGradient(
+                colors: [Color.blue.opacity(0.15), Color.blue.opacity(0.05)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+    }
+    
+    /// Helper to create bullet points
+    private func bulletPoint(_ text: String) -> some View {
+        HStack(alignment: .top, spacing: 6) {
+            Text("•")
+                .foregroundStyle(.blue)
+                .fontWeight(.bold)
+                .font(.caption2)
+            Text(text)
+                .foregroundStyle(.secondary)
+        }
     }
     
     /// Individual architecture layer row
     private func architectureRow(icon: String, title: String, detail: String) -> some View {
-        HStack(spacing: 12) {
-            Image(systemName: icon)
-                .foregroundStyle(.blue)
-                .frame(width: 24)
-                .accessibilityLabel(title)
+        HStack(spacing: 8) {
+            ZStack {
+                Circle()
+                    .fill(Color.blue.opacity(0.1))
+                    .frame(width: 24, height: 24)
+                
+                Image(systemName: icon)
+                    .foregroundStyle(.blue)
+                    .font(.system(size: 11, weight: .semibold))
+                    .accessibilityLabel(title)
+            }
             
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 0) {
                 Text(title)
-                    .font(.caption)
-                    .fontWeight(.medium)
+                    .font(.caption2)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.primary)
                 
                 Text(detail)
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
+            
+            Spacer()
         }
+        .padding(.vertical, 2)
         .accessibilityElement(children: .combine)
     }
     
     /// Form to add new moods
-    private var addMoodSection: some View {
+    /// - Parameter viewModel: The ViewModel managing business logic
+    private func addMoodSection(viewModel: MoodViewModel) -> some View {
         VStack(spacing: 16) {
             Text("Add a Mood")
                 .font(.headline)
@@ -141,24 +188,24 @@ struct ArchitectureView: View {
             // Emoji picker
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
-                    ForEach(availableEmojis, id: \.self) { emoji in
+                    ForEach(viewModel.availableEmojis, id: \.self) { emoji in
                         Button {
-                            selectedEmoji = emoji
+                            viewModel.selectEmoji(emoji)  // ViewModel action
                         } label: {
                             Text(emoji)
                                 .font(.system(size: 40))
                                 .frame(width: 60, height: 60)
                                 .background(
                                     Circle()
-                                        .fill(selectedEmoji == emoji ? Color.blue.opacity(0.2) : Color.gray.opacity(0.1))
+                                        .fill(viewModel.selectedEmoji == emoji ? Color.blue.opacity(0.2) : Color.gray.opacity(0.1))
                                 )
                                 .overlay(
                                     Circle()
-                                        .stroke(selectedEmoji == emoji ? Color.blue : Color.clear, lineWidth: 2)
+                                        .stroke(viewModel.selectedEmoji == emoji ? Color.blue : Color.clear, lineWidth: 2)
                                 )
                         }
                         .accessibilityLabel("Select \(emoji) emoji")
-                        .accessibilityAddTraits(selectedEmoji == emoji ? [.isSelected] : [])
+                        .accessibilityAddTraits(viewModel.selectedEmoji == emoji ? [.isSelected] : [])
                     }
                 }
             }
@@ -166,17 +213,20 @@ struct ArchitectureView: View {
             
             // Label text field
             HStack {
-                TextField("Mood label (e.g., Happy)", text: $moodLabel)
+                TextField("Mood label (e.g., Happy)", text: Binding(
+                    get: { viewModel.moodLabel },
+                    set: { viewModel.moodLabel = $0 }
+                ))
                     .textFieldStyle(.roundedBorder)
                 
                 Button {
-                    addMood()
+                    viewModel.addMood()  // ViewModel action (business logic)
                 } label: {
                     Image(systemName: "plus.circle.fill")
                         .font(.title2)
                         .foregroundStyle(.blue)
                 }
-                .disabled(moodLabel.isEmpty)
+                .disabled(!viewModel.canAddMood)  // ViewModel validation
                 .accessibilityLabel("Add mood")
                 .accessibilityHint("Adds the mood to the list")
             }
@@ -185,7 +235,8 @@ struct ArchitectureView: View {
     }
     
     /// List of persisted moods from SwiftData
-    private var moodsListSection: some View {
+    /// - Parameter viewModel: The ViewModel managing business logic
+    private func moodsListSection(viewModel: MoodViewModel) -> some View {
         List {
             Section {
                 if moods.isEmpty {
@@ -194,7 +245,9 @@ struct ArchitectureView: View {
                     ForEach(moods) { mood in
                         ArchitectureMoodRow(mood: mood)
                     }
-                    .onDelete(perform: deleteMoods)
+                    .onDelete { offsets in
+                        viewModel.deleteMoods(at: offsets, from: moods)  // ViewModel action
+                    }
                 }
             } header: {
                 HStack {
@@ -202,7 +255,7 @@ struct ArchitectureView: View {
                     Spacer()
                     if !moods.isEmpty {
                         Button("Clear All") {
-                            clearAllMoods()
+                            viewModel.clearAllMoods(moods)  // ViewModel action
                         }
                         .font(.caption)
                         .foregroundStyle(.red)
@@ -211,8 +264,14 @@ struct ArchitectureView: View {
                     }
                 }
             } footer: {
-                Text("Data is persisted with SwiftData. Moods survive app restarts.")
-                    .font(.caption)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("💡 Try this:")
+                        .font(.caption)
+                        .fontWeight(.semibold)
+                    Text("Add a mood, close the app (⌘Q), relaunch it. Your data will still be here!")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
         }
         .listStyle(.plain)
@@ -240,39 +299,14 @@ struct ArchitectureView: View {
         .accessibilityElement(children: .combine)
     }
     
-    // MARK: - Actions
+    // MARK: - Note
     
-    /// Add a new mood to SwiftData
-    private func addMood() {
-        guard !moodLabel.isEmpty else { return }
-        
-        // Create new Mood model
-        let newMood = Mood(emoji: selectedEmoji, label: moodLabel)
-        
-        // Insert into SwiftData context (persists automatically)
-        modelContext.insert(newMood)
-        
-        // Reset form
-        moodLabel = ""
-        
-        // Optional: Save explicitly (usually not needed, SwiftData auto-saves)
-        try? modelContext.save()
-    }
-    
-    /// Delete moods at given offsets
-    private func deleteMoods(at offsets: IndexSet) {
-        for index in offsets {
-            let mood = moods[index]
-            modelContext.delete(mood)
-        }
-    }
-    
-    /// Clear all moods from SwiftData
-    private func clearAllMoods() {
-        moods.forEach { mood in
-            modelContext.delete(mood)
-        }
-    }
+    /// ⚠️ NO BUSINESS LOGIC IN THE VIEW!
+    /// All actions (add, delete, clear) are delegated to the ViewModel
+    /// This makes the View:
+    /// - Easier to test (mock the ViewModel)
+    /// - Easier to maintain (logic changes don't touch UI)
+    /// - Reusable (same ViewModel, different Views)
 }
 
 // MARK: - Mood Row Component

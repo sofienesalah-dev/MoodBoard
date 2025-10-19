@@ -48,23 +48,33 @@ Set up a lightweight MVVM architecture with SwiftData for data persistence and t
    - Added `ModelContainer.preview` for testing
    - Pedagogical comments
 
-4. ✅ **ArchitectureView.swift** (`MoodBoard/Sources/Views/`)
-   - Demo view showcasing architecture
-   - CRUD operations (Create, Read, Delete)
+4. ✅ **MoodViewModel.swift** (`MoodBoard/Sources/ViewModels/`)
+   - ViewModel with `@Observable` for business logic
+   - Handles all CRUD operations
+   - Properties: `selectedEmoji`, `moodLabel`, `availableEmojis`
+   - Actions: `addMood()`, `deleteMoods()`, `clearAllMoods()`, `selectEmoji()`
+   - Validation: `canAddMood` computed property
+   - Dependency injection: `modelContext` injected via init
+   - **Separates business logic from UI!**
+
+5. ✅ **ArchitectureView.swift** (`MoodBoard/Sources/Views/`)
+   - View with **NO business logic** (UI only!)
+   - All actions delegated to `MoodViewModel`
+   - Uses `@State private var viewModel` to hold ViewModel
+   - Initializes ViewModel in `.onAppear` with dependency injection
    - Uses `@Query` for reactive data
-   - Uses `@Environment(\.modelContext)` for SwiftData
    - Custom `ArchitectureMoodRow` component (avoids conflict with Feature 02)
-   - Router environment commented out (not needed, would crash)
+   - Clear header explaining MVVM layers (Model, ViewModel, View, Storage)
    - Pedagogical comments
 
-5. ✅ **FeaturesListView.swift** (updated)
+6. ✅ **FeaturesListView.swift** (updated)
    - Added navigation to Feature 03
    - New section: "Architecture & Navigation"
    - FeatureRowView with orange color
 
 ### Documentation
 
-6. ✅ **03-Architecture.md** (`Docs/`)
+7. ✅ **03-Architecture.md** (`Docs/`)
    - Overview of architecture components
    - SwiftData concepts explained
    - Typed navigation explained
@@ -74,17 +84,17 @@ Set up a lightweight MVVM architecture with SwiftData for data persistence and t
 
 ### Prompt Archive
 
-7. ✅ **PROMPT.md** (`.prompts/03-arch-swiftdata-navstack/`)
+8. ✅ **PROMPT.md** (`.prompts/03-arch-swiftdata-navstack/`)
    - Complete prompt reproduction
    - Technical specifications
    - Acceptance criteria
 
-8. ✅ **feature-notes.md** (this file)
+9. ✅ **feature-notes.md** (this file)
    - Objective, deliverables, acceptance criteria
    - PR checklist
    - Development notes
 
-9. ✅ **metadata.json** (`.prompts/03-arch-swiftdata-navstack/output/`)
+10. ✅ **metadata.json** (`.prompts/03-arch-swiftdata-navstack/output/`)
    - Feature metadata
    - File references
 

@@ -20,9 +20,14 @@
       "description": "Typed navigation router with Route enum (uses String for PersistentIdentifier) and Router class"
     },
     {
+      "path": "MoodBoard/Sources/ViewModels/MoodViewModel.swift",
+      "type": "viewmodel",
+      "description": "ViewModel with @Observable handling all business logic and CRUD operations, demonstrates separation of concerns"
+    },
+    {
       "path": "MoodBoard/Sources/Views/ArchitectureView.swift",
       "type": "view",
-      "description": "Demo view showcasing MVVM architecture with SwiftData, uses ArchitectureMoodRow component, Router environment commented out"
+      "description": "View with NO business logic (UI only), delegates all actions to MoodViewModel, demonstrates proper MVVM separation"
     },
     {
       "path": "Docs/03-Architecture.md",
@@ -76,7 +81,10 @@
     "ModelContainer (persistence)",
     "Typed navigation (Route enum)",
     "Router (@Observable)",
-    "MVVM pattern",
+    "MVVM pattern with proper separation",
+    "ViewModel (@Observable) for business logic",
+    "View with NO business logic (UI only)",
+    "Dependency injection pattern",
     "In-memory vs persistent storage"
   ],
   "acceptance_criteria": [
