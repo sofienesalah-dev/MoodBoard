@@ -1,0 +1,176 @@
+{
+  "feature": {
+    "id": "04",
+    "slug": "04-list-crud",
+    "name": "List CRUD",
+    "description": "Complete CRUD operations with SwiftData persistence and MVVM architecture",
+    "status": "completed",
+    "date": "2025-10-19",
+    "jira_ticket": "MOOD-4"
+  },
+  "deliverables": {
+    "code_files": [
+      "MoodBoard/Sources/ViewModels/CRUDViewModel.swift",
+      "MoodBoard/Sources/Views/CRUDListView.swift",
+      "MoodBoard/Sources/Views/AddMoodSheetView.swift",
+      "MoodBoard/Sources/Views/CRUDMoodRowView.swift"
+    ],
+    "documentation_files": [
+      "Docs/04-ListCRUD.md"
+    ],
+    "modified_files": [
+      "MoodBoard/Sources/Views/FeaturesListView.swift"
+    ]
+  },
+  "technologies": {
+    "framework": "SwiftUI",
+    "language": "Swift 6",
+    "target": "iOS 17+",
+    "architecture": "MVVM",
+    "persistence": "SwiftData",
+    "state_management": "@Observable"
+  },
+  "concepts": {
+    "primary": [
+      "CRUD Operations",
+      "MVVM Architecture",
+      "SwiftData @Query",
+      "Form Validation",
+      "Sheet Presentation"
+    ],
+    "secondary": [
+      "Swipe Actions",
+      "Empty States",
+      "Accessibility",
+      "Dependency Injection",
+      "Context-Aware UI"
+    ]
+  },
+  "features": {
+    "create": {
+      "method": "addMood()",
+      "ui": "Sheet with emoji picker and text field",
+      "validation": "Label must not be empty"
+    },
+    "read": {
+      "method": "@Query(sort: \\Mood.timestamp, order: .reverse)",
+      "ui": "List with sections and empty state",
+      "reactivity": "Automatic UI updates"
+    },
+    "update": {
+      "method": "saveEdit()",
+      "ui": "Same sheet as create, pre-filled",
+      "trigger": "Tap row or swipe right"
+    },
+    "delete": {
+      "methods": ["deleteMood()", "deleteMoods(at:from:)", "clearAllMoods()"],
+      "ui": "Swipe left action, Clear All button",
+      "confirmation": "Destructive action (red)"
+    }
+  },
+  "components": {
+    "viewmodel": {
+      "name": "CRUDViewModel",
+      "pattern": "@Observable",
+      "responsibilities": [
+        "Business logic",
+        "Form state management",
+        "CRUD operations",
+        "Input validation"
+      ],
+      "dependencies": ["ModelContext"]
+    },
+    "main_view": {
+      "name": "CRUDListView",
+      "pattern": "SwiftUI View",
+      "data_source": "@Query",
+      "interactions": ["tap_to_edit", "swipe_to_delete"]
+    },
+    "modal": {
+      "name": "AddMoodSheetView",
+      "pattern": "Sheet presentation",
+      "modes": ["add", "edit"],
+      "detents": ["medium", "large"]
+    },
+    "row": {
+      "name": "CRUDMoodRowView",
+      "pattern": "Reusable component",
+      "accessibility": true,
+      "dark_mode": true
+    }
+  },
+  "testing": {
+    "manual_tests": [
+      "Create new mood",
+      "Edit existing mood",
+      "Delete mood",
+      "Clear all moods",
+      "Data persistence",
+      "Form validation",
+      "Dark mode",
+      "Accessibility"
+    ],
+    "edge_cases": [
+      "Empty list",
+      "Cancel edit",
+      "Sheet dismissal",
+      "Pre-filled edit form"
+    ]
+  },
+  "accessibility": {
+    "labels": true,
+    "hints": true,
+    "traits": true,
+    "voiceover_tested": true
+  },
+  "ui_ux": {
+    "dark_mode": true,
+    "empty_state": "ContentUnavailableView",
+    "swipe_actions": {
+      "leading": "Edit (blue)",
+      "trailing": "Delete (red)"
+    },
+    "toolbar": {
+      "trailing": "Add button",
+      "leading": "Clear All button (conditional)"
+    }
+  },
+  "comparisons": {
+    "android": {
+      "architecture": "ViewModel + Repository + Room",
+      "ui": "RecyclerView with ViewHolder",
+      "modal": "DialogFragment or BottomSheet"
+    },
+    "react": {
+      "architecture": "Custom hooks + Context API",
+      "ui": "List component with useState",
+      "modal": "Modal component"
+    },
+    "flutter": {
+      "architecture": "Provider + ChangeNotifier",
+      "ui": "ListView.builder",
+      "modal": "showModalBottomSheet"
+    }
+  },
+  "best_practices": {
+    "mvvm_separation": true,
+    "dependency_injection": true,
+    "error_handling": true,
+    "code_reusability": true,
+    "accessibility": true,
+    "dark_mode": true,
+    "documentation": true
+  },
+  "prompt_driven": {
+    "prompt_file": ".prompts/04-list-crud/PROMPT.md",
+    "feature_notes": ".prompts/04-list-crud/feature-notes.md",
+    "metadata": ".prompts/04-list-crud/output/metadata.json"
+  },
+  "navigation": {
+    "section": "Data Operations",
+    "number": "04",
+    "icon": "list.bullet.clipboard",
+    "color": "green"
+  }
+}
+

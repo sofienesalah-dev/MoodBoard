@@ -70,9 +70,26 @@ struct FeaturesListView: View {
                     Text("Architecture & Navigation")
                 }
                 
+                // Feature 04: List CRUD
+                Section {
+                    NavigationLink {
+                        CRUDListView()
+                    } label: {
+                        FeatureRowView(
+                            number: "04",
+                            title: "List CRUD",
+                            description: "Complete CRUD operations with SwiftData & MVVM",
+                            icon: "list.bullet.clipboard",
+                            color: .green
+                        )
+                    }
+                } header: {
+                    Text("Data Operations")
+                }
+                
                 // Future features will be added here
-                // Feature 04: @Binding
-                // Feature 05: @Environment
+                // Feature 05: @Binding
+                // Feature 06: @Environment
                 // etc.
             }
             .navigationTitle("MoodBoard Features")
