@@ -126,11 +126,14 @@ struct CRUDListView: View {
             Text("Tap **+** to add your first mood")
         } actions: {
             Button {
+                guard let viewModel else { return }
+                viewModel.cancelEdit()
                 isShowingSheet = true
             } label: {
                 Text("Add Mood")
             }
             .buttonStyle(.borderedProminent)
+            .disabled(viewModel == nil)
         }
     }
     

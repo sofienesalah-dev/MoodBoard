@@ -60,14 +60,15 @@ final class CRUDViewModel {
     
     /// Add a new mood to persistent storage
     ///
-    /// **Business Rule**: Label cannot be empty
+    /// **Business Rule**: Label cannot be empty or whitespace-only
     /// **Side Effects**: Resets form after successful creation
     func addMood() {
-        // Validation
-        guard !moodLabel.isEmpty else { return }
+        // Validation (consistent with isFormValid)
+        guard isFormValid else { return }
         
-        // Create model
-        let newMood = Mood(emoji: selectedEmoji, label: moodLabel)
+        // Create model with trimmed label
+        let trimmedLabel = moodLabel.trimmingCharacters(in: .whitespacesAndNewlines)
+        let newMood = Mood(emoji: selectedEmoji, label: trimmedLabel)
         
         // Persist via SwiftData
         modelContext.insert(newMood)
@@ -91,11 +92,12 @@ final class CRUDViewModel {
     
     /// Save changes to the currently edited mood
     func saveEdit() {
-        guard let mood = editingMood, !moodLabel.isEmpty else { return }
+        let trimmedLabel = moodLabel.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let mood = editingMood, !trimmedLabel.isEmpty else { return }
         
-        // Update model properties
+        // Update model properties with trimmed label
         mood.emoji = selectedEmoji
-        mood.label = moodLabel
+        mood.label = trimmedLabel
         mood.timestamp = Date() // Update timestamp to reflect edit
         
         // SwiftData tracks changes automatically

@@ -167,7 +167,7 @@ func deleteMood(_ mood: Mood) {
 ### @Observable (iOS 17+)
 - **Purpose:** Modern state management
 - **Replaces:** `@ObservableObject` + `@Published`
-- **Benefit:** Automatic property observation without macros
+- **Benefit:** Automatic property observation using the `@Observable` macro
 - **Performance:** Fine-grained observation (only re-renders what changed)
 
 ### Sheet Presentation
