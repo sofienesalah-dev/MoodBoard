@@ -63,6 +63,8 @@ struct MoodListView: View {
                     } label: {
                         Image(systemName: "plus.circle.fill")
                     }
+                    .accessibilityLabel("Add new mood")
+                    .accessibilityHint("Opens a sheet to record your current mood")
                 }
                 
                 if !store.moods.isEmpty {
@@ -73,6 +75,8 @@ struct MoodListView: View {
                             }
                         }
                         .foregroundStyle(.red)
+                        .accessibilityLabel("Clear all moods")
+                        .accessibilityHint("Removes all recorded moods from the list")
                     }
                 }
             }
@@ -121,6 +125,7 @@ struct MoodRowView: View {
             // Emoji
             Text(mood.emoji)
                 .font(.system(size: 44))
+                .accessibilityHidden(true) // Emoji is decorative, label provides context
             
             // Label and timestamp
             VStack(alignment: .leading, spacing: 4) {
@@ -135,6 +140,9 @@ struct MoodRowView: View {
             Spacer()
         }
         .padding(.vertical, 8)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(mood.label) mood, \(mood.emoji)")
+        .accessibilityValue("Recorded \(mood.timestamp.formatted(.relative(presentation: .named)))")
     }
 }
 
@@ -181,6 +189,7 @@ struct AddMoodSheet: View {
                                 VStack(spacing: 8) {
                                     Text(option.emoji)
                                         .font(.system(size: 40))
+                                        .accessibilityHidden(true) // Emoji is decorative
                                     
                                     Text(option.label)
                                         .font(.caption)
@@ -198,6 +207,9 @@ struct AddMoodSheet: View {
                                 )
                             }
                             .buttonStyle(.plain)
+                            .accessibilityLabel(option.label)
+                            .accessibilityHint("Select \(option.label) mood")
+                            .accessibilityAddTraits(selectedEmoji == option.emoji ? .isSelected : [])
                         }
                     }
                     .padding(.vertical, 8)
@@ -221,6 +233,8 @@ struct AddMoodSheet: View {
                         addMood()
                     }
                     .disabled(label.isEmpty)
+                    .accessibilityLabel("Add mood")
+                    .accessibilityHint(label.isEmpty ? "Enter a label to add mood" : "Saves your mood entry")
                 }
             }
         }
