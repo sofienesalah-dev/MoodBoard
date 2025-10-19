@@ -1,0 +1,158 @@
+{
+  "feature": {
+    "id": "03-arch-swiftdata-navstack",
+    "number": "03",
+    "title": "Architecture — MVVM + SwiftData + Typed Navigation",
+    "description": "Lightweight MVVM architecture with SwiftData for persistence and typed navigation using NavigationStack",
+    "date": "2025-10-19",
+    "status": "completed",
+    "jira_ticket": "MOOD-3"
+  },
+  "files_created": [
+    {
+      "path": "MoodBoard/Sources/Models/Mood.swift",
+      "type": "model",
+      "description": "SwiftData model with @Model macro, includes insertSamples(into:) helper for previews"
+    },
+    {
+      "path": "MoodBoard/Sources/Navigation/Router.swift",
+      "type": "navigation",
+      "description": "Typed navigation router with Route enum (uses String for PersistentIdentifier) and Router class"
+    },
+    {
+      "path": "MoodBoard/Sources/Views/ArchitectureView.swift",
+      "type": "view",
+      "description": "Demo view showcasing MVVM architecture with SwiftData, uses ArchitectureMoodRow component, Router environment commented out"
+    },
+    {
+      "path": "Docs/03-Architecture.md",
+      "type": "documentation",
+      "description": "Comprehensive documentation of MVVM + SwiftData architecture"
+    }
+  ],
+  "files_modified": [
+    {
+      "path": "MoodBoard/MoodBoardApp.swift",
+      "changes": "Added Mood model to Schema, configured ModelContainer, uses Mood.insertSamples(into:) for preview data"
+    },
+    {
+      "path": "MoodBoard/Sources/Views/FeaturesListView.swift",
+      "changes": "Added navigation link to Feature 03 in new 'Architecture & Navigation' section"
+    },
+    {
+      "path": "MoodBoard/Sources/Models/MoodStore.swift",
+      "changes": "Renamed 'Mood' struct to 'MoodEntry' to avoid naming conflict with SwiftData Mood model"
+    },
+    {
+      "path": "MoodBoard/Sources/Views/MoodListView.swift",
+      "changes": "Updated MoodRowView to use 'MoodEntry' instead of 'Mood'"
+    }
+  ],
+  "prompt_archive": [
+    {
+      "path": ".prompts/03-arch-swiftdata-navstack/PROMPT.md",
+      "description": "Complete prompt reproduction with technical specifications"
+    },
+    {
+      "path": ".prompts/03-arch-swiftdata-navstack/feature-notes.md",
+      "description": "Feature summary with objectives, deliverables, and development notes"
+    },
+    {
+      "path": ".prompts/03-arch-swiftdata-navstack/output/metadata.json",
+      "description": "This file - feature metadata and file references"
+    }
+  ],
+  "technical_stack": {
+    "ios_version": "17+",
+    "swift_version": "6",
+    "framework": "SwiftUI",
+    "persistence": "SwiftData",
+    "navigation": "NavigationStack",
+    "architecture": "MVVM"
+  },
+  "key_concepts": [
+    "@Model (SwiftData)",
+    "@Query (reactive queries)",
+    "ModelContainer (persistence)",
+    "Typed navigation (Route enum)",
+    "Router (@Observable)",
+    "MVVM pattern",
+    "In-memory vs persistent storage"
+  ],
+  "acceptance_criteria": [
+    "View compiles and runs in Xcode (iOS 17+)",
+    "SwiftData ModelContainer configured",
+    "Typed navigation implemented",
+    "Previews work with in-memory storage",
+    "CRUD operations functional",
+    "Data persists between restarts",
+    "MVVM architecture documented",
+    "Dark mode support verified"
+  ],
+  "navigation": {
+    "section": "Architecture & Navigation",
+    "number": "03",
+    "title": "Architecture",
+    "description": "MVVM + SwiftData persistence + Typed navigation",
+    "icon": "building.columns",
+    "color": "orange"
+  },
+  "related_features": [
+    {
+      "id": "01-intro-state",
+      "title": "Intro @State",
+      "relation": "Foundation for local state management"
+    },
+    {
+      "id": "02-observation",
+      "title": "Observation",
+      "relation": "In-memory state with @Observable"
+    }
+  ],
+  "next_features": [
+    {
+      "id": "04-binding",
+      "title": "@Binding",
+      "description": "Parent-child communication"
+    },
+    {
+      "id": "05-environment",
+      "title": "@Environment",
+      "description": "Dependency injection"
+    },
+    {
+      "id": "06-relationships",
+      "title": "SwiftData Relationships",
+      "description": "One-to-many and many-to-many relationships"
+    }
+  ],
+  "comparisons": {
+    "swiftdata_vs_room": "SwiftData uses @Model macro (similar to @Entity), automatic migrations, less boilerplate",
+    "swiftdata_vs_coredata": "Pure Swift, declarative syntax, better type safety, easier to use",
+    "typed_navigation_vs_react_router": "Enum-based routes (compile-time safety) vs string-based paths",
+    "mvvm_swiftui_vs_android": "Views are lightweight, @Observable is ViewModel, @Model is Model, SwiftData replaces Room"
+  },
+  "known_issues_and_solutions": [
+    {
+      "issue": "Type inference error with Mood.samples.forEach",
+      "solution": "Created Mood.insertSamples(into:) helper function"
+    },
+    {
+      "issue": "Naming conflict: struct Mood (Feature 02) vs @Model class Mood (Feature 03)",
+      "solution": "Renamed Feature 02's Mood to MoodEntry"
+    },
+    {
+      "issue": "PersistentIdentifier not Hashable",
+      "solution": "Use String (URIRepresentation) for Route.moodDetail(idString:)"
+    },
+    {
+      "issue": "Crash with @Environment(Router.self) - Router not injected",
+      "solution": "Commented out Router environment in ArchitectureView (not needed)"
+    },
+    {
+      "issue": "MoodRowView redeclaration conflict",
+      "solution": "Created ArchitectureMoodRow for Feature 03"
+    }
+  ]
+}
+

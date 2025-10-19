@@ -53,9 +53,26 @@ struct FeaturesListView: View {
                     Text("State Management")
                 }
                 
+                // Feature 03: Architecture
+                Section {
+                    NavigationLink {
+                        ArchitectureView()
+                    } label: {
+                        FeatureRowView(
+                            number: "03",
+                            title: "Architecture",
+                            description: "MVVM + SwiftData persistence + Typed navigation",
+                            icon: "building.columns",
+                            color: .orange
+                        )
+                    }
+                } header: {
+                    Text("Architecture & Navigation")
+                }
+                
                 // Future features will be added here
-                // Feature 03: @Binding
-                // Feature 04: @Environment
+                // Feature 04: @Binding
+                // Feature 05: @Environment
                 // etc.
             }
             .navigationTitle("MoodBoard Features")

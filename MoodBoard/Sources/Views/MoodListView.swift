@@ -118,7 +118,7 @@ struct MoodListView: View {
 
 /// Row component displaying a single mood
 struct MoodRowView: View {
-    let mood: Mood
+    let mood: MoodEntry
     
     var body: some View {
         HStack(spacing: 16) {
