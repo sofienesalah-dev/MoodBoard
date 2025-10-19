@@ -1,0 +1,11 @@
+name: hig-advisor
+description: Offline HIG advisor for SwiftUI demos
+command: python3
+args:
+  - tools/hig-advisor/index.py
+  - --root
+  - Guides/HIG
+capabilities:
+  - analyze_text
+  - analyze_file
+

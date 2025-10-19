@@ -1,0 +1,9 @@
+name: a11y-check
+description: Heuristic accessibility checker for SwiftUI views
+command: python3
+args:
+  - tools/a11y-check/index.py
+capabilities:
+  - analyze_file
+  - analyze_text
+

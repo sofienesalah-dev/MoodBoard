@@ -42,6 +42,7 @@ struct IntroStateView: View {
                 Image(systemName: "sparkles")
                     .font(.system(size: 50))
                     .foregroundStyle(.blue.gradient)
+                    .accessibilityLabel("Introduction feature icon")
                 
                 Text("Intro @State")
                     .font(.title)
@@ -86,6 +87,7 @@ struct IntroStateView: View {
                 HStack {
                     Image(systemName: "plus.circle.fill")
                         .font(.title2)
+                        .accessibilityHidden(true) // Icon decorative, button label is sufficient
                     Text("Increment")
                         .fontWeight(.semibold)
                 }
@@ -97,6 +99,9 @@ struct IntroStateView: View {
                 }
                 .foregroundStyle(.white)
             }
+            .accessibilityLabel("Increment counter")
+            .accessibilityHint("Increases the counter value by one")
+            .accessibilityValue("Current value: \(counter)")
             .padding(.horizontal)
             
             // Reset Button (conditional)
@@ -110,6 +115,8 @@ struct IntroStateView: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
+                .accessibilityLabel("Reset counter")
+                .accessibilityHint("Sets the counter back to zero")
                 .transition(.opacity.combined(with: .scale))
             }
             
