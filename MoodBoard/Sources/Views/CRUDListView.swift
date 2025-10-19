@@ -50,6 +50,9 @@ struct CRUDListView: View {
     /// Controls sheet presentation for add/edit
     @State private var isShowingSheet = false
     
+    /// Controls confirmation dialog for clear all
+    @State private var isShowingClearConfirmation = false
+    
     // MARK: - Body
     
     var body: some View {
@@ -72,6 +75,20 @@ struct CRUDListView: View {
             if let viewModel {
                 AddMoodSheetView(viewModel: viewModel)
             }
+        }
+        .confirmationDialog(
+            "Are you sure you want to delete all moods?",
+            isPresented: $isShowingClearConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button("Delete All", role: .destructive) {
+                withAnimation {
+                    viewModel?.clearAllMoods(moods)
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("This action cannot be undone.")
         }
         .task {
             // Initialize ViewModel with the actual ModelContext from environment
@@ -104,9 +121,7 @@ struct CRUDListView: View {
         if !moods.isEmpty {
             ToolbarItem(placement: .topBarLeading) {
                 Button {
-                    withAnimation {
-                        viewModel?.clearAllMoods(moods)
-                    }
+                    isShowingClearConfirmation = true
                 } label: {
                     Text("Clear All")
                 }

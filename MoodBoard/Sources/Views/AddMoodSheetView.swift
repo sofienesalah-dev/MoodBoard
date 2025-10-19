@@ -26,7 +26,8 @@ struct AddMoodSheetView: View {
     
     /// ViewModel managing business logic
     /// Injected from parent view
-    let viewModel: CRUDViewModel
+    /// @Bindable enables direct $ syntax for two-way bindings
+    @Bindable var viewModel: CRUDViewModel
     
     /// Environment dismiss action
     @Environment(\.dismiss) private var dismiss
@@ -93,12 +94,9 @@ struct AddMoodSheetView: View {
     /// Label input section
     private var labelInputSection: some View {
         Section {
-            TextField("How are you feeling?", text: Binding(
-                get: { viewModel.moodLabel },
-                set: { viewModel.moodLabel = $0 }
-            ))
-            .textInputAutocapitalization(.sentences)
-            .accessibilityLabel("Mood label")
+            TextField("How are you feeling?", text: $viewModel.moodLabel)
+                .textInputAutocapitalization(.sentences)
+                .accessibilityLabel("Mood label")
         } header: {
             Text("Label")
         } footer: {

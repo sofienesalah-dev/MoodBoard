@@ -119,8 +119,14 @@ Demonstrate complete **CRUD** (Create, Read, Update, Delete) operations with Swi
 ### Create (C)
 ```swift
 func addMood() {
-    guard !moodLabel.isEmpty else { return }
-    let newMood = Mood(emoji: selectedEmoji, label: moodLabel)
+    // Validate form (trim whitespace)
+    guard isFormValid else { return }
+    
+    // Create model with trimmed label
+    let trimmedLabel = moodLabel.trimmingCharacters(in: .whitespacesAndNewlines)
+    let newMood = Mood(emoji: selectedEmoji, label: trimmedLabel)
+    
+    // Persist via SwiftData
     modelContext.insert(newMood)
     saveContext()
     resetForm()
