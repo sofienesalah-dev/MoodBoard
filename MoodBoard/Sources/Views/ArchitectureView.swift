@@ -116,6 +116,7 @@ struct ArchitectureView: View {
             Image(systemName: icon)
                 .foregroundStyle(.blue)
                 .frame(width: 24)
+                .accessibilityLabel(title)
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
@@ -127,6 +128,7 @@ struct ArchitectureView: View {
                     .foregroundStyle(.secondary)
             }
         }
+        .accessibilityElement(children: .combine)
     }
     
     /// Form to add new moods
@@ -155,9 +157,12 @@ struct ArchitectureView: View {
                                         .stroke(selectedEmoji == emoji ? Color.blue : Color.clear, lineWidth: 2)
                                 )
                         }
+                        .accessibilityLabel("Select \(emoji) emoji")
+                        .accessibilityAddTraits(selectedEmoji == emoji ? [.isSelected] : [])
                     }
                 }
             }
+            .accessibilityLabel("Emoji picker")
             
             // Label text field
             HStack {
@@ -172,6 +177,8 @@ struct ArchitectureView: View {
                         .foregroundStyle(.blue)
                 }
                 .disabled(moodLabel.isEmpty)
+                .accessibilityLabel("Add mood")
+                .accessibilityHint("Adds the mood to the list")
             }
         }
         .padding()
@@ -199,6 +206,8 @@ struct ArchitectureView: View {
                         }
                         .font(.caption)
                         .foregroundStyle(.red)
+                        .accessibilityLabel("Clear all moods")
+                        .accessibilityHint("Deletes all moods from the list")
                     }
                 }
             } footer: {
@@ -215,6 +224,8 @@ struct ArchitectureView: View {
             Image(systemName: "face.smiling")
                 .font(.system(size: 50))
                 .foregroundStyle(.gray)
+                .accessibilityLabel("Smiling face")
+                .accessibilityHidden(true) // Decorative image
             
             Text("No moods yet")
                 .font(.headline)
@@ -226,6 +237,7 @@ struct ArchitectureView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 32)
+        .accessibilityElement(children: .combine)
     }
     
     // MARK: - Actions
