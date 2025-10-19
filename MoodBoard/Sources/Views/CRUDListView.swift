@@ -12,15 +12,26 @@ import SwiftData
 /// Wrapper view that constructs the ViewModel with the environment ModelContext
 ///
 /// **Architecture Pattern:**
-/// This wrapper eliminates the need for optional ViewModel and nil checks
-/// by constructing a non-optional ViewModel before passing to content view.
+/// Wrapper persists ViewModel identity with @State to prevent recreation on each render
 struct CRUDListView: View {
     
     /// SwiftData environment context (injected by SwiftUI)
     @Environment(\.modelContext) private var modelContext
     
+    /// ViewModel persisted with @State, initialized once in .task
+    @State private var viewModel: CRUDViewModel?
+    
     var body: some View {
-        CRUDListContentView(viewModel: CRUDViewModel(modelContext: modelContext))
+        Group {
+            if let viewModel {
+                CRUDListContentView(viewModel: viewModel)
+            }
+        }
+        .task {
+            if viewModel == nil {
+                viewModel = CRUDViewModel(modelContext: modelContext)
+            }
+        }
     }
 }
 
@@ -122,12 +133,11 @@ private struct CRUDListContentView: View {
         // Clear all button (only when list is not empty)
         if !moods.isEmpty {
             ToolbarItem(placement: .topBarLeading) {
-                Button {
+                Button(role: .destructive) {
                     isShowingClearConfirmation = true
                 } label: {
                     Text("Clear All")
                 }
-                .tint(.red)
                 .accessibilityLabel("Clear all moods")
                 .accessibilityHint("Deletes all mood entries from the list")
             }

@@ -126,19 +126,20 @@ final class CRUDViewModel {
     ///   - offsets: IndexSet of moods to delete
     ///   - moods: Array of all moods (from @Query)
     func deleteMoods(at offsets: IndexSet, from moods: [Mood]) {
-        for index in offsets {
-            let mood = moods[index]
-            modelContext.delete(mood)
-        }
-        saveContext()
+        let moodsToDelete = offsets.map { moods[$0] }
+        deleteMoods(moodsToDelete)
     }
     
     /// Clear all moods from storage
     /// - Parameter moods: Array of all moods (from @Query)
     func clearAllMoods(_ moods: [Mood]) {
-        moods.forEach { mood in
-            modelContext.delete(mood)
-        }
+        deleteMoods(moods)
+    }
+    
+    /// Delete a sequence of moods (helper to avoid duplication)
+    /// - Parameter moods: Moods to delete
+    private func deleteMoods(_ moods: some Sequence<Mood>) {
+        moods.forEach { modelContext.delete($0) }
         saveContext()
     }
     
