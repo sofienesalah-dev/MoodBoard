@@ -11,7 +11,7 @@ import SwiftUI
 /// Model representing a mood entry
 ///
 /// Simple struct to represent a user's mood at a given moment.
-/// No need for Identifiable protocol as we use UUID for identification.
+/// Conforms to Identifiable for use in SwiftUI ForEach loops.
 struct Mood: Identifiable {
     let id = UUID()
     var emoji: String
