@@ -37,6 +37,10 @@ struct ContentView: View {
         .environment(router)
     }
     
+    // MARK: - Environment
+    
+    @Environment(\.modelContext) private var modelContext
+    
     // MARK: - Destination Resolver
     
     /// Resolve route to corresponding view
@@ -57,8 +61,17 @@ struct ContentView: View {
         case .crudList:
             CRUDListView()
             
-        case .moodDetail(let mood):
-            MoodDetailView(mood: mood)
+        case .moodDetail(let id):
+            // Resolve Mood from persistent identifier
+            if let mood = modelContext.model(for: id) as? Mood {
+                MoodDetailView(mood: mood)
+            } else {
+                ContentUnavailableView(
+                    "Mood Not Found",
+                    systemImage: "exclamationmark.triangle",
+                    description: Text("This mood may have been deleted.")
+                )
+            }
         }
     }
 }

@@ -61,9 +61,16 @@ enum Route: Hashable {
     case observation
     case architecture
     case crudList
-    case moodDetail(mood: Mood)  // ✨ Passes full object, not just ID
+    case moodDetail(id: PersistentIdentifier)  // ✨ ID-based navigation
 }
 ```
+
+**Why PersistentIdentifier instead of Mood object?**
+- PersistentIdentifier is Hashable & Codable (perfect for navigation)
+- Navigation state can be serialized/restored
+- Decouples navigation from model lifecycle
+- Better for deep linking (can convert to/from URL if needed)
+- Follows SwiftData best practices
 
 **Why Hashable?**
 - Required by `NavigationStack(path:)`
@@ -93,11 +100,12 @@ final class Router {
 
 ### 3. **ContentView** (Root NavigationStack)
 
-Single NavigationStack for entire app:
+Single NavigationStack for entire app with ID-based resolution:
 
 ```swift
 struct ContentView: View {
     @State private var router = Router()
+    @Environment(\.modelContext) private var modelContext
     
     var body: some View {
         NavigationStack(path: $router.path) {
@@ -108,14 +116,29 @@ struct ContentView: View {
         }
         .environment(router)  // ✨ Inject to all children
     }
+    
+    @ViewBuilder
+    private func destinationView(for route: Route) -> some View {
+        switch route {
+        // ... other routes
+        case .moodDetail(let id):
+            if let mood = modelContext.model(for: id) as? Mood {
+                MoodDetailView(mood: mood)
+            } else {
+                ContentUnavailableView("Mood Not Found", ...)
+            }
+        }
+    }
 }
 ```
 
 **Key Points:**
 - Creates Router once at root
 - Binds Router.path to NavigationStack
-- Registers all navigation destinations
+- **Resolves Mood from PersistentIdentifier** using SwiftData's `model(for:)`
+- Handles missing/deleted moods gracefully (returns nil)
 - Injects Router via environment
+- Clean, simple resolution - no string parsing needed
 
 ### 4. **Child Views** (Router Consumers)
 
@@ -168,17 +191,23 @@ case .crudList:
 ```swift
 // 1. User taps mood row in CRUDListView
 Button {
-    router.navigate(to: .moodDetail(mood: mood))
+    router.navigate(to: .moodDetail(id: mood.persistentModelID))
 }
 
-// 2. Router appends .moodDetail(mood) to path
-router.path.append(.moodDetail(mood: selectedMood))
+// 2. Router appends .moodDetail(id) to path
+router.path.append(.moodDetail(id: mood.persistentModelID))
 
 // 3. NavigationStack matches .moodDetail in destinationView()
-case .moodDetail(let mood):
-    MoodDetailView(mood: mood)
+case .moodDetail(let id):
+    // Resolve Mood from PersistentIdentifier
+    if let mood = modelContext.model(for: id) as? Mood {
+        MoodDetailView(mood: mood)
+    } else {
+        ContentUnavailableView("Mood Not Found", ...)
+    }
 
-// 4. MoodDetailView presented with mood object
+// 4. MoodDetailView presented with resolved mood object
+// 5. @Bindable still works - changes persist to SwiftData
 ```
 
 ### Flow 3: Back Navigation
@@ -208,14 +237,21 @@ NavigationLink {
 }
 ```
 
-### After (Router Button):
+### After (Router Button with PersistentIdentifier):
 ```swift
 Button {
-    router.navigate(to: .moodDetail(mood: mood))
+    router.navigate(to: .moodDetail(id: mood.persistentModelID))
 } label: {
     MoodRowView(mood: mood)
 }
 ```
+
+**Why pass PersistentIdentifier instead of object?**
+- Navigation path can be serialized (state restoration)
+- PersistentIdentifier is Hashable & Codable
+- Decoupled from model lifecycle
+- Handles deleted objects gracefully
+- Simple resolution via `modelContext.model(for:)`
 
 ### Before (Nested NavigationStack):
 ```swift
@@ -367,16 +403,43 @@ func restoreNavigationState() {
 
 ## ✅ Verification Checklist
 
+### Architecture
 - [x] Single NavigationStack at root (ContentView)
 - [x] Router created and injected via environment
 - [x] All routes defined in Route enum
 - [x] All destinations registered in ContentView
+- [x] ID-based navigation (PersistentIdentifier, not Mood object)
+- [x] Mood resolution via `modelContext.model(for:)` in destinationView()
+- [x] Error handling for missing/deleted moods (ContentUnavailableView)
+
+### Navigation
 - [x] FeaturesListView uses router.navigate()
-- [x] CRUDListView uses router.navigate() for detail
+- [x] CRUDListView uses router.navigate() with ID
 - [x] No nested NavigationStacks (except modals)
 - [x] Back navigation works correctly
 - [x] No blank screens or navigation bugs
+
+### Data Persistence
 - [x] Favorite toggle persists correctly
+- [x] @Bindable works with resolved Mood
+- [x] SwiftData changes auto-save
+
+### Manual Validation Steps
+
+1. **Test ID-based navigation:**
+   - Tap mood in list → Verify detail view loads
+   - Toggle favorite → Go back → Verify persists
+   - Delete mood → Try navigate → Handle gracefully
+
+2. **Test navigation stack:**
+   - Navigate Features → CRUD → Detail
+   - Back button works at each level
+   - No blank screens or errors
+
+3. **Test error handling:**
+   - Navigate to detail
+   - Delete mood (if possible)
+   - Should show "Mood Not Found" gracefully
 
 ---
 

@@ -254,13 +254,14 @@ private func shareMood() {
 NavigationLink(destination: DetailView(id: "123"))
 ```
 
-**Modern (Centralized Router):**
+**Modern (Centralized Router with PersistentIdentifier):**
 ```swift
 // ✅ Type-safe with centralized routing
 @Environment(Router.self) private var router
 
 Button {
-    router.navigate(to: .moodDetail(mood: mood))  // Route enum
+    // Navigate by PersistentIdentifier (Hashable & Codable)
+    router.navigate(to: .moodDetail(id: mood.persistentModelID))
 } label: {
     MoodRowView(mood: mood)
 }
@@ -268,8 +269,13 @@ Button {
 // In ContentView (root):
 .navigationDestination(for: Route.self) { route in
     switch route {
-    case .moodDetail(let mood):
-        MoodDetailView(mood: mood)
+    case .moodDetail(let id):
+        // Resolve Mood from PersistentIdentifier using SwiftData
+        if let mood = modelContext.model(for: id) as? Mood {
+            MoodDetailView(mood: mood)
+        } else {
+            ContentUnavailableView("Mood Not Found", ...)
+        }
     // ... other routes
     }
 }
@@ -278,10 +284,12 @@ Button {
 **Benefits:**
 - ✅ Compile-time safety (Route enum)
 - ✅ Single source of truth (centralized)
-- ✅ No ID serialization/parsing
-- ✅ Direct object manipulation
+- ✅ **ID-based navigation** (PersistentIdentifier is Hashable & Codable)
+- ✅ **Handles deleted objects gracefully** (shows error view)
 - ✅ Programmatic navigation from anywhere
 - ✅ Easy to add analytics, logging, deep links
+- ✅ Navigation state can be saved/restored
+- ✅ Clean SwiftData integration - no string parsing
 
 **Requirements:**
 - `Route` enum must be `Hashable`

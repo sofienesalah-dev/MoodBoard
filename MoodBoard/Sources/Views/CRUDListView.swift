@@ -168,8 +168,8 @@ struct CRUDListView: View {
             Section {
                 ForEach(moods) { mood in
                     Button {
-                        // Navigate to detail via Router
-                        router.navigate(to: .moodDetail(mood: mood))
+                        // Navigate to detail via Router (by PersistentIdentifier)
+                        router.navigate(to: .moodDetail(id: mood.persistentModelID))
                     } label: {
                         CRUDMoodRowView(mood: mood)
                     }

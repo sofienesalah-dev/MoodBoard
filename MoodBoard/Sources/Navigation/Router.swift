@@ -46,9 +46,9 @@ enum Route: Hashable {
     
     // MARK: - Detail Routes
     
-    /// Detail view for a specific mood
-    /// Using Mood directly (Hashable via @Model)
-    case moodDetail(mood: Mood)
+    /// Detail view for a specific mood (by ID)
+    /// PersistentIdentifier is Hashable & Codable, perfect for navigation
+    case moodDetail(id: PersistentIdentifier)
     
     // Future routes can be added here
     // case settings
