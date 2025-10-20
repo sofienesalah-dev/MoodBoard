@@ -9,32 +9,6 @@
 import SwiftUI
 import SwiftData
 
-/// Wrapper view that constructs the ViewModel with the environment ModelContext
-///
-/// **Architecture Pattern:**
-/// Wrapper persists ViewModel identity with @State to prevent recreation on each render
-struct CRUDListView: View {
-    
-    /// SwiftData environment context (injected by SwiftUI)
-    @Environment(\.modelContext) private var modelContext
-    
-    /// ViewModel persisted with @State, initialized once in .task
-    @State private var viewModel: CRUDViewModel?
-    
-    var body: some View {
-        Group {
-            if let viewModel {
-                CRUDListContentView(viewModel: viewModel)
-            }
-        }
-        .task {
-            if viewModel == nil {
-                viewModel = CRUDViewModel(modelContext: modelContext)
-            }
-        }
-    }
-}
-
 /// Main view demonstrating complete CRUD operations with SwiftData
 ///
 /// **Key Concepts:**
@@ -53,9 +27,12 @@ struct CRUDListView: View {
 /// - Android: RecyclerView + ViewModel + Room
 /// - React: List components + useState + Context
 /// - Vue.js: v-for + reactive refs + Pinia store
-private struct CRUDListContentView: View {
+struct CRUDListView: View {
     
     // MARK: - Dependencies
+    
+    /// SwiftData environment context (injected by SwiftUI)
+    @Environment(\.modelContext) private var modelContext
     
     /// Query all moods from SwiftData (sorted by timestamp, newest first)
     /// @Query is reactive: UI updates automatically when data changes
@@ -65,8 +42,8 @@ private struct CRUDListContentView: View {
     // MARK: - ViewModel
     
     /// ViewModel managing all CRUD business logic
-    /// Non-optional, constructed by parent wrapper with correct ModelContext
-    @Bindable var viewModel: CRUDViewModel
+    /// Created immediately on init with a placeholder, then replaced in .task with correct context
+    @State private var viewModel: CRUDViewModel = CRUDViewModel(modelContext: ModelContext(ModelContainer.preview))
     
     // MARK: - UI State
     
@@ -110,6 +87,10 @@ private struct CRUDListContentView: View {
             Button("Cancel", role: .cancel) {}
         } message: {
             Text("This action cannot be undone.")
+        }
+        .task {
+            // Replace with actual environment context
+            viewModel = CRUDViewModel(modelContext: modelContext)
         }
     }
     
