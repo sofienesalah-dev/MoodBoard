@@ -284,11 +284,11 @@ Button {
 **Benefits:**
 - ✅ Compile-time safety (Route enum)
 - ✅ Single source of truth (centralized)
-- ✅ **ID-based navigation** (PersistentIdentifier is Hashable & Codable)
+- ✅ **ID-based navigation** (PersistentIdentifier is **Hashable and Codable** - iOS 17+)
 - ✅ **Handles deleted objects gracefully** (shows error view)
 - ✅ Programmatic navigation from anywhere
 - ✅ Easy to add analytics, logging, deep links
-- ✅ Navigation state can be saved/restored
+- ✅ **Navigation state can be saved/restored** (Codable support)
 - ✅ Clean SwiftData integration - no string parsing
 
 **Requirements:**

@@ -66,15 +66,15 @@ enum Route: Hashable {
 ```
 
 **Why PersistentIdentifier instead of Mood object?**
-- PersistentIdentifier is Hashable & Codable (perfect for navigation)
-- Navigation state can be serialized/restored
+- PersistentIdentifier is **Hashable and Codable** (iOS 17+)
+- Navigation state **can be serialized/restored** automatically
 - Decouples navigation from model lifecycle
 - Better for deep linking (can convert to/from URL if needed)
 - Follows SwiftData best practices
 
 **Why Hashable?**
 - Required by `NavigationStack(path:)`
-- Enables navigation state serialization
+- Enables navigation state serialization (when combined with Codable)
 - Allows route comparison and deduplication
 
 ### 2. **Router Class** (`Router.swift`)
@@ -248,7 +248,7 @@ Button {
 
 **Why pass PersistentIdentifier instead of object?**
 - Navigation path can be serialized (state restoration)
-- PersistentIdentifier is Hashable & Codable
+- PersistentIdentifier is **Hashable and Codable** (iOS 17+)
 - Decoupled from model lifecycle
 - Handles deleted objects gracefully
 - Simple resolution via `modelContext.model(for:)`

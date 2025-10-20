@@ -173,6 +173,8 @@ struct CRUDListView: View {
                     } label: {
                         CRUDMoodRowView(mood: mood)
                     }
+                    .accessibilityLabel("View details for \(mood.label)")
+                    .accessibilityHint("Double tap to view full mood details")
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         // Delete action (consolidated - single deletion path)
                         Button(role: .destructive) {

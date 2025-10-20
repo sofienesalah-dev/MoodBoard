@@ -85,7 +85,6 @@ struct MoodDetailView: View {
             Text(mood.emoji)
                 .font(.system(size: 100))
         }
-        .accessibilityLabel("Mood emoji: \(mood.emoji)")
         .accessibilityHidden(true) // Decorative, label provides context
     }
     

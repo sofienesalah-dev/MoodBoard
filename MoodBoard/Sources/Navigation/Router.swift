@@ -47,8 +47,8 @@ enum Route: Hashable {
     // MARK: - Detail Routes
     
     /// Detail view for a specific mood (by ID)
-    /// PersistentIdentifier is Hashable (enabling navigation), but not Codable by default.
-    /// If you need to serialize this (e.g., for state restoration or deep linking), additional work is required.
+    /// PersistentIdentifier is Hashable and Codable (iOS 17+/Swift 6)
+    /// This enables serialization for state restoration or deep linking
     case moodDetail(id: PersistentIdentifier)
     
     // Future routes can be added here

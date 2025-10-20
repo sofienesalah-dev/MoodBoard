@@ -71,6 +71,7 @@ struct ContentView: View {
                     systemImage: "exclamationmark.triangle",
                     description: Text("This mood may have been deleted.")
                 )
+                .accessibilityLabel("Mood not found. This mood may have been deleted.")
             }
         }
     }
