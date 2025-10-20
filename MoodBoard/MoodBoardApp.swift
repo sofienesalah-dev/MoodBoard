@@ -31,11 +31,16 @@ struct MoodBoardApp: App {
     
     /// Shared ModelContainer for the app
     /// Configured with the Mood model and persistent storage
+    ///
+    /// **Migration Strategy:**
+    /// - Attempts to create container with existing data
+    /// - If schema migration fails, deletes old data and creates fresh container
+    /// - This ensures app doesn't crash when model changes during development
     var sharedModelContainer: ModelContainer = {
         // Define the schema with all models
         let schema = Schema([
             Item.self,  // Legacy model (from template)
-            Mood.self,  // Feature 03: Mood model with SwiftData
+            Mood.self,  // Feature 05: Mood model with isFavorite
         ])
         
         // Configure storage (persistent by default, in-memory for previews)
@@ -47,7 +52,19 @@ struct MoodBoardApp: App {
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            // Migration failed - delete old data and create fresh container
+            print("⚠️ ModelContainer creation failed, attempting to reset data: \(error)")
+            
+            // Delete old persistent store
+            let url = modelConfiguration.url
+            try? FileManager.default.removeItem(at: url)
+            
+            // Try again with fresh data
+            do {
+                return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            } catch {
+                fatalError("Could not create ModelContainer even after reset: \(error)")
+            }
         }
     }()
 
