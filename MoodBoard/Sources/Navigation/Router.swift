@@ -38,14 +38,18 @@ enum Route: Hashable {
     /// Feature 02: Observation with @Observable
     case observation
     
-    /// Feature 03: Architecture demo (this feature)
+    /// Feature 03: Architecture demo
     case architecture
+    
+    /// Feature 04 & 05: CRUD List with detail navigation
+    case crudList
     
     // MARK: - Detail Routes
     
     /// Detail view for a specific mood (by ID)
-    /// Note: Using String for PersistentIdentifier URIRepresentation for Hashable conformance
-    case moodDetail(moodURIString: String)
+    /// PersistentIdentifier is Hashable and Codable (iOS 17+/Swift 6)
+    /// This enables serialization for state restoration or deep linking
+    case moodDetail(id: PersistentIdentifier)
     
     // Future routes can be added here
     // case settings

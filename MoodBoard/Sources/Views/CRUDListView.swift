@@ -16,12 +16,14 @@ import SwiftData
 /// - **MVVM Pattern**: All business logic in CRUDViewModel
 /// - **SwiftData Persistence**: Data survives app restarts
 /// - **Sheet Presentation**: Modal form for adding/editing
+/// - **Centralized Navigation**: Uses Router for navigation to detail
 ///
 /// **CRUD Operations:**
 /// - Create: Add new mood via sheet
 /// - Read: Display all moods with @Query
-/// - Update: Edit existing mood (tap to edit)
+/// - Update: Edit existing mood (swipe right)
 /// - Delete: Swipe to delete or clear all
+/// - Detail: Tap to view details & toggle favorite
 ///
 /// **Comparison with other frameworks:**
 /// - Android: RecyclerView + ViewModel + Room
@@ -34,6 +36,9 @@ struct CRUDListView: View {
     /// SwiftData environment context (injected by SwiftUI)
     @Environment(\.modelContext) private var modelContext
     
+    /// Centralized router for navigation
+    @Environment(Router.self) private var router
+    
     /// Query all moods from SwiftData (sorted by timestamp, newest first)
     /// @Query is reactive: UI updates automatically when data changes
     @Query(sort: \Mood.timestamp, order: .reverse)
@@ -42,8 +47,8 @@ struct CRUDListView: View {
     // MARK: - ViewModel
     
     /// ViewModel managing all CRUD business logic
-    /// Created immediately on init with a placeholder, then replaced in .task with correct context
-    @State private var viewModel: CRUDViewModel = CRUDViewModel(modelContext: ModelContext(ModelContainer.preview))
+    /// Initialized in onAppear to use the correct environment context
+    @State private var viewModel: CRUDViewModel?
     
     // MARK: - UI State
     
@@ -56,17 +61,36 @@ struct CRUDListView: View {
     // MARK: - Body
     
     var body: some View {
+        Group {
+            if let viewModel {
+                contentView(viewModel: viewModel)
+            } else {
+                ProgressView()
+            }
+        }
+        .onAppear {
+            // Initialize with actual environment context (only once)
+            if viewModel == nil {
+                viewModel = CRUDViewModel(modelContext: modelContext)
+            }
+        }
+    }
+    
+    // MARK: - Content View
+    
+    @ViewBuilder
+    private func contentView(viewModel: CRUDViewModel) -> some View {
         ZStack {
             if moods.isEmpty {
-                emptyStateView
+                emptyStateView(viewModel: viewModel)
             } else {
-                moodsList
+                moodsList(viewModel: viewModel)
             }
         }
         .navigationTitle("CRUD Demo")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
-            toolbarContent
+            toolbarContent(viewModel: viewModel)
         }
         .sheet(isPresented: $isShowingSheet) {
             // Sheet dismissed: cancel any pending edit
@@ -88,17 +112,13 @@ struct CRUDListView: View {
         } message: {
             Text("This action cannot be undone.")
         }
-        .task {
-            // Replace with actual environment context
-            viewModel = CRUDViewModel(modelContext: modelContext)
-        }
     }
     
     // MARK: - Subviews
     
     /// Toolbar buttons
     @ToolbarContentBuilder
-    private var toolbarContent: some ToolbarContent {
+    private func toolbarContent(viewModel: CRUDViewModel) -> some ToolbarContent {
         // Add button
         ToolbarItem(placement: .topBarTrailing) {
             Button {
@@ -126,7 +146,7 @@ struct CRUDListView: View {
     }
     
     /// Empty state when no moods exist
-    private var emptyStateView: some View {
+    private func emptyStateView(viewModel: CRUDViewModel) -> some View {
         ContentUnavailableView {
             Label("No Moods Yet", systemImage: "face.smiling")
         } description: {
@@ -143,37 +163,38 @@ struct CRUDListView: View {
     }
     
     /// List of moods with swipe actions
-    private var moodsList: some View {
+    private func moodsList(viewModel: CRUDViewModel) -> some View {
         List {
             Section {
                 ForEach(moods) { mood in
-                    CRUDMoodRowView(mood: mood)
-                        .contentShape(Rectangle()) // Make entire row tappable
-                        .onTapGesture {
-                            // Tap to edit
+                    Button {
+                        // Navigate to detail via Router (by PersistentIdentifier)
+                        router.navigate(to: .moodDetail(id: mood.persistentModelID))
+                    } label: {
+                        CRUDMoodRowView(mood: mood)
+                    }
+                    .accessibilityLabel("View details for \(mood.label)")
+                    .accessibilityHint("Double tap to view full mood details")
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        // Delete action (consolidated - single deletion path)
+                        Button(role: .destructive) {
+                            withAnimation {
+                                viewModel.deleteMood(mood)
+                            }
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+                    .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                        // Edit action
+                        Button {
                             viewModel.startEditing(mood)
                             isShowingSheet = true
+                        } label: {
+                            Label("Edit", systemImage: "pencil")
                         }
-                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            // Delete action (consolidated - single deletion path)
-                            Button(role: .destructive) {
-                                withAnimation {
-                                    viewModel.deleteMood(mood)
-                                }
-                            } label: {
-                                Label("Delete", systemImage: "trash")
-                            }
-                        }
-                        .swipeActions(edge: .leading, allowsFullSwipe: false) {
-                            // Edit action
-                            Button {
-                                viewModel.startEditing(mood)
-                                isShowingSheet = true
-                            } label: {
-                                Label("Edit", systemImage: "pencil")
-                            }
-                            .tint(.blue)
-                        }
+                        .tint(.blue)
+                    }
                 }
             } header: {
                 Text("My Moods (\(moods.count))")
@@ -186,8 +207,9 @@ struct CRUDListView: View {
                     Group {
                         Text("• **Create**: Tap + to add new mood")
                         Text("• **Read**: All moods from SwiftData")
-                        Text("• **Update**: Tap a mood to edit it")
-                        Text("• **Delete**: Swipe left or right")
+                        Text("• **Update**: Swipe right for quick edit")
+                        Text("• **Delete**: Swipe left to delete")
+                        Text("• **Detail**: Tap a mood to view details & toggle favorite ❤️")
                     }
                     .font(.caption2)
                     .foregroundStyle(.secondary)

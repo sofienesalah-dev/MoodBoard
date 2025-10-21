@@ -47,42 +47,40 @@ struct MoodListView: View {
     // MARK: - Body
     
     var body: some View {
-        NavigationStack {
-            ZStack {
-                if store.moods.isEmpty {
-                    emptyStateView
-                } else {
-                    moodListContent
-                }
+        ZStack {
+            if store.moods.isEmpty {
+                emptyStateView
+            } else {
+                moodListContent
             }
-            .navigationTitle("My Moods")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        isShowingAddMood = true
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                    }
-                    .accessibilityLabel("Add new mood")
-                    .accessibilityHint("Opens a sheet to record your current mood")
+        }
+        .navigationTitle("My Moods")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    isShowingAddMood = true
+                } label: {
+                    Image(systemName: "plus.circle.fill")
                 }
-                
-                if !store.moods.isEmpty {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button("Clear All") {
-                            withAnimation {
-                                store.clearAll()
-                            }
+                .accessibilityLabel("Add new mood")
+                .accessibilityHint("Opens a sheet to record your current mood")
+            }
+            
+            if !store.moods.isEmpty {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Clear All") {
+                        withAnimation {
+                            store.clearAll()
                         }
-                        .foregroundStyle(.red)
-                        .accessibilityLabel("Clear all moods")
-                        .accessibilityHint("Removes all recorded moods from the list")
                     }
+                    .foregroundStyle(.red)
+                    .accessibilityLabel("Clear all moods")
+                    .accessibilityHint("Removes all recorded moods from the list")
                 }
             }
-            .sheet(isPresented: $isShowingAddMood) {
-                AddMoodSheet(store: store)
-            }
+        }
+        .sheet(isPresented: $isShowingAddMood) {
+            AddMoodSheet(store: store)
         }
     }
     

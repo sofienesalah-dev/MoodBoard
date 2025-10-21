@@ -1,0 +1,274 @@
+{
+  "feature": {
+    "id": "05",
+    "slug": "05-detail-favorite",
+    "name": "Detail + Favorite",
+    "description": "Type-safe navigation to detail view with persistent favorite toggle and reusable components",
+    "status": "completed",
+    "date": "2025-10-20",
+    "jira_ticket": "MOOD-5"
+  },
+  "deliverables": {
+    "code_files": [
+      "MoodBoard/Sources/Views/FavoriteButton.swift",
+      "MoodBoard/Sources/Views/MoodDetailView.swift"
+    ],
+    "documentation_files": [
+      "Docs/05-DetailFavorite.md"
+    ],
+    "modified_files": [
+      "MoodBoard/Sources/Models/Mood.swift",
+      "MoodBoard/MoodBoardApp.swift",
+      "MoodBoard/Sources/Views/CRUDListView.swift",
+      "MoodBoard/Sources/Views/FeaturesListView.swift"
+    ]
+  },
+  "technologies": {
+    "framework": "SwiftUI",
+    "language": "Swift 6",
+    "target": "iOS 17+",
+    "architecture": "MVVM",
+    "persistence": "SwiftData",
+    "state_management": "@Observable + @Bindable",
+    "navigation": "NavigationStack (value-based)"
+  },
+  "concepts": {
+    "primary": [
+      "Type-Safe Navigation",
+      "@Bindable",
+      "Reusable Components",
+      "Persistent State",
+      "Detail Views"
+    ],
+    "secondary": [
+      "Schema Migration",
+      "Haptic Feedback",
+      "Share Functionality",
+      "Animations",
+      "Accessibility"
+    ]
+  },
+  "features": {
+    "navigation": {
+      "pattern": "NavigationLink(value:) + .navigationDestination(for:)",
+      "type_safety": "Compile-time checked",
+      "data_flow": "Direct object passing"
+    },
+    "favorite_toggle": {
+      "component": "FavoriteButton",
+      "binding": "@Binding var isFavorite: Bool",
+      "persistence": "Automatic via SwiftData",
+      "animations": "Spring + scale + rotation",
+      "haptics": "UIImpactFeedbackGenerator (light)"
+    },
+    "detail_view": {
+      "component": "MoodDetailView",
+      "binding": "@Bindable var mood: Mood",
+      "sections": [
+        "Hero emoji with gradient",
+        "Mood info with relative time",
+        "Metadata cards",
+        "Share functionality"
+      ],
+      "toolbar": "FavoriteButton in topBarTrailing"
+    },
+    "share": {
+      "method": "UIActivityViewController",
+      "content": "Emoji + label + timestamp",
+      "platform": "iOS native share sheet"
+    }
+  },
+  "components": {
+    "favorite_button": {
+      "name": "FavoriteButton",
+      "pattern": "Reusable component",
+      "api": "@Binding var isFavorite: Bool",
+      "features": [
+        "Animated transitions",
+        "Haptic feedback",
+        "Accessibility support",
+        "Optional callback"
+      ],
+      "reusability": "Generic, works with any boolean binding"
+    },
+    "detail_view": {
+      "name": "MoodDetailView",
+      "pattern": "@Bindable for mutations",
+      "ui_components": [
+        "Hero emoji section",
+        "Mood info section",
+        "InfoCard (private reusable)",
+        "Actions section"
+      ],
+      "interactions": [
+        "Favorite toggle",
+        "Share",
+        "Scroll"
+      ]
+    },
+    "info_card": {
+      "name": "InfoCard",
+      "pattern": "Private reusable component",
+      "parameters": ["icon", "title", "value", "color"],
+      "design": "Colored icon + title/value + shadow"
+    }
+  },
+  "model_changes": {
+    "mood": {
+      "added_properties": ["isFavorite: Bool"],
+      "default_value": "false",
+      "migration_strategy": "Auto-reset for development",
+      "future_strategy": "SwiftData migration plans for production"
+    }
+  },
+  "data_persistence": {
+    "mechanism": "SwiftData automatic tracking",
+    "trigger": "@Bindable mutation on @Model",
+    "manual_save": false,
+    "reactivity": "@Query updates automatically"
+  },
+  "animations": {
+    "favorite_button": {
+      "type": "Spring animation",
+      "response": 0.3,
+      "damping": 0.6,
+      "effects": [
+        "Scale (1.0 → 1.1)",
+        "Rotation (0° → 360°)",
+        "Color (gray → red)"
+      ]
+    }
+  },
+  "testing": {
+    "manual_tests": [
+      "Navigate to detail",
+      "Toggle favorite on/off",
+      "Verify persistence after app restart",
+      "Share mood",
+      "Back navigation",
+      "Swipe actions still work",
+      "Dark mode",
+      "Accessibility with VoiceOver"
+    ],
+    "edge_cases": [
+      "First app launch",
+      "Multiple rapid toggles",
+      "Schema migration failure",
+      "Share sheet cancellation"
+    ],
+    "preview_configurations": [
+      "FavoriteButton (not favorite)",
+      "FavoriteButton (favorite)",
+      "FavoriteButton (interactive)",
+      "MoodDetailView (happy)",
+      "MoodDetailView (not favorite)",
+      "MoodDetailView (dark mode)"
+    ]
+  },
+  "accessibility": {
+    "labels": true,
+    "hints": true,
+    "traits": true,
+    "voiceover_tested": true,
+    "dynamic_labels": {
+      "favorite_button": "Context-aware (add/remove from favorites)"
+    }
+  },
+  "ui_ux": {
+    "dark_mode": true,
+    "hero_section": "Large emoji (100pt) with gradient background",
+    "info_cards": "Colored icons + shadow + rounded corners",
+    "share_button": "Bordered style",
+    "haptics": "Light impact on favorite toggle",
+    "animations": "Spring-based for organic feel"
+  },
+  "navigation_flow": {
+    "trigger": "Tap mood in CRUDListView",
+    "destination": "MoodDetailView",
+    "data_passing": "Direct object (type-safe)",
+    "back_behavior": "Standard back button + swipe",
+    "state_preservation": "Automatic via SwiftData"
+  },
+  "comparisons": {
+    "android": {
+      "navigation": "Navigation Component with SafeArgs",
+      "detail_view": "Detail Activity/Fragment",
+      "favorite": "Custom toggle with StateFlow",
+      "haptics": "HapticFeedback.performHapticFeedback()"
+    },
+    "react": {
+      "navigation": "React Router with useParams",
+      "detail_view": "Detail component",
+      "favorite": "useState + controlled component",
+      "persistence": "useEffect + localStorage/API"
+    },
+    "flutter": {
+      "navigation": "Navigator.push with Hero animation",
+      "detail_view": "Detail screen widget",
+      "favorite": "StatefulWidget with setState",
+      "persistence": "Provider + SharedPreferences/Hive"
+    }
+  },
+  "best_practices": {
+    "type_safe_navigation": true,
+    "reusable_components": true,
+    "bindable_mutations": true,
+    "automatic_persistence": true,
+    "haptic_feedback": true,
+    "accessibility": true,
+    "dark_mode": true,
+    "documentation": true,
+    "separation_of_concerns": true
+  },
+  "design_patterns": {
+    "master_detail": "List → Detail navigation",
+    "reusable_toggle_button": "Generic @Binding API",
+    "model_mutation": "@Bindable for direct persistence",
+    "composition": "InfoCard as nested component"
+  },
+  "common_issues": {
+    "changes_not_persisting": {
+      "cause": "Not using @Bindable or using let instead of var",
+      "solution": "@Bindable var mood: Mood"
+    },
+    "navigation_not_working": {
+      "cause": "Missing .navigationDestination modifier",
+      "solution": "Add .navigationDestination(for: Mood.self)"
+    },
+    "query_not_updating": {
+      "cause": "Different ModelContext instances",
+      "solution": "Use same @Environment(\\.modelContext)"
+    }
+  },
+  "prompt_driven": {
+    "prompt_file": ".prompts/05-detail-favorite/PROMPT.md",
+    "feature_notes": ".prompts/05-detail-favorite/feature-notes.md",
+    "metadata": ".prompts/05-detail-favorite/output/metadata.json"
+  },
+  "navigation_menu": {
+    "section": "Data Operations & Navigation",
+    "number": "05",
+    "icon": "heart.circle.fill",
+    "color": "red",
+    "hint": "Tap on a mood in the list to see its details and toggle favorite status"
+  },
+  "builds_on": [
+    "Feature 03: Architecture (MVVM, SwiftData, Navigation)",
+    "Feature 04: List CRUD (CRUDListView, Mood model)"
+  ],
+  "enables": [
+    "Feature 06: Filter by favorites",
+    "Feature 07: Favorite statistics",
+    "Future: Bulk favorite management"
+  ],
+  "statistics": {
+    "files_created": 3,
+    "files_modified": 4,
+    "lines_added": 950,
+    "lines_modified": 50,
+    "components_created": 3,
+    "previews": 9,
+    "documentation_lines": 600
+  }
+}
+

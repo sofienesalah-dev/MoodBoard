@@ -43,6 +43,10 @@ final class Mood {
     /// SwiftData handles Date serialization automatically
     var timestamp: Date
     
+    /// Whether this mood is marked as favorite
+    /// Allows users to highlight important moods
+    var isFavorite: Bool
+    
     // MARK: - Initialization
     
     /// Create a new mood entry
@@ -50,10 +54,12 @@ final class Mood {
     ///   - emoji: The emoji representing the mood (e.g., "😊")
     ///   - label: A text description (e.g., "Happy")
     ///   - timestamp: When the mood was recorded (defaults to now)
-    init(emoji: String, label: String, timestamp: Date = Date()) {
+    ///   - isFavorite: Whether this mood is marked as favorite (defaults to false)
+    init(emoji: String, label: String, timestamp: Date = Date(), isFavorite: Bool = false) {
         self.emoji = emoji
         self.label = label
         self.timestamp = timestamp
+        self.isFavorite = isFavorite
     }
 }
 
@@ -64,10 +70,10 @@ extension Mood {
     /// Returns an array of Mood instances
     static var samples: [Mood] {
         [
-            Mood(emoji: "😊", label: "Happy", timestamp: Date().addingTimeInterval(-3600)),
-            Mood(emoji: "🎉", label: "Excited", timestamp: Date().addingTimeInterval(-7200)),
-            Mood(emoji: "😴", label: "Tired", timestamp: Date().addingTimeInterval(-10800)),
-            Mood(emoji: "🤔", label: "Thoughtful", timestamp: Date().addingTimeInterval(-14400))
+            Mood(emoji: "😊", label: "Happy", timestamp: Date().addingTimeInterval(-3600), isFavorite: true),
+            Mood(emoji: "🎉", label: "Excited", timestamp: Date().addingTimeInterval(-7200), isFavorite: false),
+            Mood(emoji: "😴", label: "Tired", timestamp: Date().addingTimeInterval(-10800), isFavorite: false),
+            Mood(emoji: "🤔", label: "Thoughtful", timestamp: Date().addingTimeInterval(-14400), isFavorite: true)
         ]
     }
     

@@ -12,89 +12,96 @@ import SwiftUI
 ///
 /// This view serves as the entry point to navigate through all
 /// implemented features in the MoodBoard project.
+///
+/// **Navigation:** Uses centralized Router instead of local NavigationLinks
 struct FeaturesListView: View {
+    
+    // MARK: - Navigation
+    
+    @Environment(Router.self) private var router
     
     // MARK: - Body
     
     var body: some View {
-        NavigationStack {
-            List {
-                // Feature 01: Intro State
-                Section {
-                    NavigationLink {
-                        IntroStateView()
-                    } label: {
-                        FeatureRowView(
-                            number: "01",
-                            title: "Intro @State",
-                            description: "Declarative paradigm & local state management",
-                            icon: "sparkles",
-                            color: .blue
-                        )
-                    }
-                } header: {
-                    Text("SwiftUI Fundamentals")
+        List {
+            // Feature 01: Intro State
+            Section {
+                Button {
+                    router.navigate(to: .introState)
+                } label: {
+                    FeatureRowView(
+                        number: "01",
+                        title: "Intro @State",
+                        description: "Declarative paradigm & local state management",
+                        icon: "sparkles",
+                        color: .blue
+                    )
                 }
-                
-                // Feature 02: @Observable
-                Section {
-                    NavigationLink {
-                        MoodListView()
-                    } label: {
-                        FeatureRowView(
-                            number: "02",
-                            title: "Observation",
-                            description: "Modern state management with @Observable & @Bindable",
-                            icon: "brain.head.profile",
-                            color: .purple
-                        )
-                    }
-                } header: {
-                    Text("State Management")
-                }
-                
-                // Feature 03: Architecture
-                Section {
-                    NavigationLink {
-                        ArchitectureView()
-                    } label: {
-                        FeatureRowView(
-                            number: "03",
-                            title: "Architecture",
-                            description: "MVVM + SwiftData persistence + Typed navigation",
-                            icon: "building.columns",
-                            color: .orange
-                        )
-                    }
-                } header: {
-                    Text("Architecture & Navigation")
-                }
-                
-                // Feature 04: List CRUD
-                Section {
-                    NavigationLink {
-                        CRUDListView()
-                    } label: {
-                        FeatureRowView(
-                            number: "04",
-                            title: "List CRUD",
-                            description: "Complete CRUD operations with SwiftData & MVVM",
-                            icon: "list.bullet.clipboard",
-                            color: .green
-                        )
-                    }
-                } header: {
-                    Text("Data Operations")
-                }
-                
-                // Future features will be added here
-                // Feature 05: @Binding
-                // Feature 06: @Environment
-                // etc.
+            } header: {
+                Text("SwiftUI Fundamentals")
             }
-            .navigationTitle("MoodBoard Features")
-            .navigationBarTitleDisplayMode(.large)
+            
+            // Feature 02: @Observable
+            Section {
+                Button {
+                    router.navigate(to: .observation)
+                } label: {
+                    FeatureRowView(
+                        number: "02",
+                        title: "Observation",
+                        description: "Modern state management with @Observable & @Bindable",
+                        icon: "brain.head.profile",
+                        color: .purple
+                    )
+                }
+            } header: {
+                Text("State Management")
+            }
+            
+            // Feature 03: Architecture
+            Section {
+                Button {
+                    router.navigate(to: .architecture)
+                } label: {
+                    FeatureRowView(
+                        number: "03",
+                        title: "Architecture",
+                        description: "MVVM + SwiftData persistence + Typed navigation",
+                        icon: "building.columns",
+                        color: .orange
+                    )
+                }
+            } header: {
+                Text("Architecture & Navigation")
+            }
+            
+            // Feature 04 & 05: List CRUD + Detail
+            Section {
+                Button {
+                    router.navigate(to: .crudList)
+                } label: {
+                    FeatureRowView(
+                        number: "04-05",
+                        title: "CRUD + Detail",
+                        description: "Complete CRUD with navigation to detail view & favorites",
+                        icon: "list.bullet.clipboard",
+                        color: .green
+                    )
+                }
+            } header: {
+                Text("Data Operations & Navigation")
+            } footer: {
+                Text("💡 Tap on a mood in the list to see its details and toggle favorite status")
+                    .font(.caption2)
+            }
+            
+            // Future features will be added here
+            // Feature 06: @Environment
+            // Feature 07: Animations
+            // etc.
         }
+        .navigationTitle("MoodBoard Features")
+        .navigationBarTitleDisplayMode(.large)
     }
 }
 
