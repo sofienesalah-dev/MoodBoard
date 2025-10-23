@@ -455,8 +455,10 @@ struct BulletPoint: View {
 #Preview("App Intents View - With Data") {
     NavigationStack {
         AppIntentsView()
-            .modelContainer(for: Mood.self, inMemory: true) { container in
-                Mood.insertSamples(into: container.mainContext)
+            .modelContainer(for: Mood.self, inMemory: true) { result in
+                if case .success(let container) = result {
+                    Mood.insertSamples(into: container.mainContext)
+                }
             }
     }
 }
