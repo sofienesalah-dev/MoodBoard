@@ -115,6 +115,9 @@ struct FeaturesListView: View {
                     .font(.caption2)
             }
             
+            // Note: Feature 06 (Cross-Platform Comparisons) is documentation only (Docs/Comparisons.md)
+            // and does not have a dedicated view in the app navigation
+            
             // Future features will be added here
             // Feature 08: Animations
             // etc.
