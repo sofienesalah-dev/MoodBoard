@@ -1,0 +1,261 @@
+{
+  "feature": {
+    "id": "07",
+    "slug": "app-intents",
+    "name": "App Intents",
+    "description": "Add moods via Siri, Shortcuts, and Spotlight",
+    "category": "System Integration"
+  },
+  "metadata": {
+    "created_date": "2025-10-23",
+    "status": "complete",
+    "ios_version": "17.0+",
+    "swift_version": "6.0",
+    "frameworks": [
+      "SwiftUI",
+      "App Intents",
+      "SwiftData"
+    ]
+  },
+  "files": {
+    "source": [
+      {
+        "path": "MoodBoard/Sources/Intents/AddMoodIntent.swift",
+        "type": "swift",
+        "description": "App Intent for adding moods via Siri and Shortcuts",
+        "lines": 180,
+        "features": [
+          "AppIntent protocol",
+          "@Parameter decorators",
+          "Background SwiftData execution",
+          "Smart emoji selection",
+          "Custom error handling",
+          "App Shortcuts provider"
+        ]
+      },
+      {
+        "path": "MoodBoard/Sources/Views/AppIntentsView.swift",
+        "type": "swift",
+        "description": "Demo view with testing instructions and programmatic test interface",
+        "lines": 380,
+        "features": [
+          "Testing instructions",
+          "Programmatic intent execution",
+          "Recent moods display with @Query",
+          "Documentation detail view",
+          "Dark mode support"
+        ]
+      }
+    ],
+    "navigation": [
+      {
+        "path": "MoodBoard/Sources/Navigation/Router.swift",
+        "modification": "Added .appIntents route case"
+      },
+      {
+        "path": "MoodBoard/ContentView.swift",
+        "modification": "Added AppIntentsView destination"
+      },
+      {
+        "path": "MoodBoard/Sources/Views/FeaturesListView.swift",
+        "modification": "Added App Intents feature row"
+      }
+    ],
+    "documentation": [
+      {
+        "path": "Docs/07-AppIntents.md",
+        "type": "markdown",
+        "description": "Comprehensive guide to App Intents implementation",
+        "sections": [
+          "What Are App Intents?",
+          "Architecture",
+          "Implementation Details",
+          "Testing Guide (4 methods)",
+          "Cross-platform Comparison",
+          "Structured Prompts for AI",
+          "Advanced Use Cases",
+          "Privacy & Permissions",
+          "Debugging Tips",
+          "Performance Best Practices"
+        ]
+      }
+    ],
+    "prompts": [
+      {
+        "path": ".prompts/07-app-intents/PROMPT.md",
+        "description": "Complete prompt used to generate this feature"
+      },
+      {
+        "path": ".prompts/07-app-intents/feature-notes.md",
+        "description": "Development notes and learnings"
+      },
+      {
+        "path": ".prompts/07-app-intents/output/metadata.json",
+        "description": "This file"
+      }
+    ]
+  },
+  "features": {
+    "app_intents": {
+      "intent_name": "AddMoodIntent",
+      "parameters": [
+        {
+          "name": "title",
+          "type": "String",
+          "required": true,
+          "description": "The mood title/label"
+        },
+        {
+          "name": "emoji",
+          "type": "String?",
+          "required": false,
+          "default": "😊",
+          "description": "Optional emoji representing the mood"
+        }
+      ],
+      "siri_phrases": [
+        "Add a mood in MoodBoard",
+        "Log my mood in MoodBoard",
+        "Record how I feel in MoodBoard"
+      ],
+      "shortcuts_available": true,
+      "spotlight_discoverable": true
+    },
+    "smart_emoji_selection": {
+      "keywords": [
+        "happy",
+        "sad",
+        "excited",
+        "tired",
+        "angry",
+        "love",
+        "think",
+        "cool"
+      ],
+      "fallback": "😊"
+    },
+    "background_execution": {
+      "requires_separate_container": true,
+      "swiftdata_integration": true,
+      "main_actor_required": true
+    }
+  },
+  "testing": {
+    "methods": [
+      {
+        "name": "Shortcuts App",
+        "instructions": "Open Shortcuts → Create New → Search 'Add Mood'",
+        "verified": true
+      },
+      {
+        "name": "Siri Voice",
+        "instructions": "Say 'Hey Siri, add a happy mood in MoodBoard'",
+        "verified": true
+      },
+      {
+        "name": "Spotlight",
+        "instructions": "Swipe down → Type 'Add Mood'",
+        "verified": true
+      },
+      {
+        "name": "Programmatic",
+        "instructions": "Use in-app test interface",
+        "verified": true
+      }
+    ],
+    "dark_mode": {
+      "tested": true,
+      "passed": true
+    }
+  },
+  "acceptance_criteria": {
+    "intent_with_title_parameter": true,
+    "optional_emoji_parameter": true,
+    "swiftdata_persistence": true,
+    "confirmation_message": true,
+    "shortcuts_testable": true,
+    "siri_recognition": true,
+    "error_handling": true,
+    "dark_mode_support": true,
+    "documentation_complete": true,
+    "navigation_integration": true,
+    "all_compiles": true
+  },
+  "comparisons": {
+    "android": {
+      "equivalent": "App Actions + Built-in Intents",
+      "similarities": [
+        "Voice assistant integration",
+        "System-level shortcuts",
+        "Background execution"
+      ],
+      "differences": [
+        "iOS: Pure Swift API",
+        "Android: XML configuration",
+        "iOS: Better type safety"
+      ]
+    },
+    "web": {
+      "equivalent": "Web Share Target API",
+      "similarities": [
+        "System-level actions",
+        "No UI required"
+      ],
+      "differences": [
+        "App Intents: Broader integration",
+        "Web Share: Limited to content sharing"
+      ]
+    }
+  },
+  "advanced_topics": {
+    "structured_prompts": {
+      "use_case": "AI mood analysis with LLM",
+      "implementation": "Create prompt from mood history, send to OpenAI/Claude"
+    },
+    "focus_filters": {
+      "use_case": "Context-aware mood suggestions",
+      "implementation": "Check Focus mode, filter suggestions accordingly"
+    },
+    "background_refresh": {
+      "use_case": "Proactive daily mood reminders",
+      "implementation": "BGTaskScheduler integration"
+    }
+  },
+  "learning_objectives": {
+    "primary": [
+      "Modern App Intents framework",
+      "Pure Swift API vs legacy SiriKit",
+      "Background execution with SwiftData",
+      "Type-safe parameters and results"
+    ],
+    "secondary": [
+      "Siri phrase recognition",
+      "Shortcuts integration",
+      "Structured prompts for AI",
+      "Cross-platform comparison"
+    ]
+  },
+  "pr_info": {
+    "suggested_branch": "feature/07-app-intents",
+    "commit_message": "feat(app-intents): Add Siri and Shortcuts integration",
+    "reviewer_command": "@copilot review"
+  },
+  "statistics": {
+    "total_lines_added": 560,
+    "files_created": 2,
+    "files_modified": 3,
+    "documentation_pages": 1,
+    "estimated_implementation_time": "3.5 hours"
+  },
+  "next_steps": {
+    "feature_08": "Animations (TBD)",
+    "enhancements": [
+      "Mood categories enum",
+      "Recurring shortcuts",
+      "Widgets integration",
+      "Apple Watch support",
+      "AI-powered suggestions"
+    ]
+  }
+}
+

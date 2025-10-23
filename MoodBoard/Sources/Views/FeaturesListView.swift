@@ -95,9 +95,28 @@ struct FeaturesListView: View {
                     .font(.caption2)
             }
             
+            // Feature 07: App Intents
+            Section {
+                Button {
+                    router.navigate(to: .appIntents)
+                } label: {
+                    FeatureRowView(
+                        number: "07",
+                        title: "App Intents",
+                        description: "Add moods via Siri, Shortcuts & Spotlight",
+                        icon: "wand.and.stars",
+                        color: .purple
+                    )
+                }
+            } header: {
+                Text("System Integration")
+            } footer: {
+                Text("💡 Say \"Hey Siri, add a happy mood in MoodBoard\" to test!")
+                    .font(.caption2)
+            }
+            
             // Future features will be added here
-            // Feature 06: @Environment
-            // Feature 07: Animations
+            // Feature 08: Animations
             // etc.
         }
         .navigationTitle("MoodBoard Features")

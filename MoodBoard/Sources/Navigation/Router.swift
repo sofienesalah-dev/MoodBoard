@@ -44,6 +44,9 @@ enum Route: Hashable {
     /// Feature 04 & 05: CRUD List with detail navigation
     case crudList
     
+    /// Feature 07: App Intents
+    case appIntents
+    
     // MARK: - Detail Routes
     
     /// Detail view for a specific mood (by ID)
