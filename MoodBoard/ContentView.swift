@@ -64,6 +64,9 @@ struct ContentView: View {
         case .appIntents:
             AppIntentsView()
             
+        case .appleIntelligence:
+            AppleIntelligenceView()
+            
         case .moodDetail(let id):
             // Resolve Mood from persistent identifier
             if let mood = modelContext.model(for: id) as? Mood {

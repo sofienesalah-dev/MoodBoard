@@ -115,6 +115,26 @@ struct FeaturesListView: View {
                     .font(.caption2)
             }
             
+            // Feature 12: Apple Intelligence
+            Section {
+                Button {
+                    router.navigate(to: .appleIntelligence)
+                } label: {
+                    FeatureRowView(
+                        number: "12",
+                        title: "Apple Intelligence",
+                        description: "Privacy-first AI: sentiment analysis, pattern detection & smart suggestions",
+                        icon: "brain.head.profile",
+                        color: .indigo
+                    )
+                }
+            } header: {
+                Text("AI & Machine Learning")
+            } footer: {
+                Text("🧠 All AI processing happens on-device. Your data never leaves your iPhone.")
+                    .font(.caption2)
+            }
+            
             // Note: Feature 06 (Cross-Platform Comparisons) is documentation only (Docs/Comparisons.md)
             // and does not have a dedicated view in the app navigation
             

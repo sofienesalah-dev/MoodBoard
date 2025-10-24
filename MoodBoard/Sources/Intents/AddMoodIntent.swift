@@ -146,6 +146,7 @@ struct AddMoodIntent: AppIntent {
 struct MoodBoardShortcuts: AppShortcutsProvider {
     
     static var appShortcuts: [AppShortcut] {
+        // Feature 07: Basic Add Mood
         AppShortcut(
             intent: AddMoodIntent(),
             phrases: [
@@ -155,6 +156,40 @@ struct MoodBoardShortcuts: AppShortcutsProvider {
             ],
             shortTitle: "Add Mood",
             systemImageName: "face.smiling"
+        )
+        
+        // Feature 12: Query Mood History with AI
+        AppShortcut(
+            intent: QueryMoodHistoryIntent(),
+            phrases: [
+                "How am I feeling in \(.applicationName)",
+                "Show my mood patterns in \(.applicationName)",
+                "What's my mood trend in \(.applicationName)"
+            ],
+            shortTitle: "Query Mood History",
+            systemImageName: "chart.line.uptrend.xyaxis"
+        )
+        
+        // Feature 12: Add Mood with AI Context Analysis
+        AppShortcut(
+            intent: AddMoodWithContextIntent(),
+            phrases: [
+                "Add mood with AI in \(.applicationName)",
+                "Analyze my mood in \(.applicationName)"
+            ],
+            shortTitle: "Add Mood (AI)",
+            systemImageName: "brain.head.profile"
+        )
+        
+        // Feature 12: Find Moods by Criteria
+        AppShortcut(
+            intent: FindMoodsIntent(),
+            phrases: [
+                "Find my moods in \(.applicationName)",
+                "Search moods in \(.applicationName)"
+            ],
+            shortTitle: "Find Moods",
+            systemImageName: "magnifyingglass"
         )
     }
 }
