@@ -82,6 +82,12 @@ final class SentimentAnalyzer {
             return AnalysisResult(sentiment: .neutral, confidence: 0.0, suggestedEmojis: [])
         }
         
+        // For very short texts (< 5 characters), return neutral until more context
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard trimmed.count >= 5 else {
+            return AnalysisResult(sentiment: .neutral, confidence: 0.0, suggestedEmojis: [])
+        }
+        
         // Use NLTagger for sentiment detection
         let tagger = NLTagger(tagSchemes: [.sentimentScore])
         tagger.string = text
