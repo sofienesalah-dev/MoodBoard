@@ -160,13 +160,14 @@ struct QueryMoodHistoryIntent: AppIntent {
         let positive = sentiments.filter { $0 == SentimentAnalyzer.Sentiment.positive }.count
         let negative = sentiments.filter { $0 == SentimentAnalyzer.Sentiment.negative }.count
         
+        let periodName = period.rawValue.lowercased()
         let trend: String
         if positive > negative * 2 {
-            trend = "You've had a really positive \(period.rawValue.lowercased()) 🌟"
+            trend = "You've had a really positive \(periodName) 🌟"
         } else if negative > positive * 2 {
-            trend = "This \(period.rawValue.lowercased()) has been tough. Remember, you're doing your best 💪"
+            trend = "This \(periodName) has been tough. Remember, you're doing your best 💪"
         } else {
-            trend = "Your \(period.rawValue.lowercased()) has been balanced"
+            trend = "Your \(periodName) has been balanced"
         }
         
         // Top emoji
@@ -202,7 +203,7 @@ struct AddMoodWithContextIntent: AppIntent {
         let analysis = analyzer.analyze(moodText)
         
         // Get suggested emoji
-        let suggestedEmoji = analysis.suggestedEmojis.first ?? analysis.sentiment.emoji
+        let suggestedEmoji = analyzer.selectPrimaryEmoji(from: analysis)
         
         // Create mood
         let mood = Mood(

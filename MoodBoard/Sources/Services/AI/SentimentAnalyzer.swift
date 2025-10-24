@@ -112,6 +112,13 @@ final class SentimentAnalyzer {
         texts.map { analyze($0) }
     }
     
+    /// Select primary emoji from analysis result
+    /// - Parameter analysis: Analysis result containing suggested emojis
+    /// - Returns: Primary emoji to use (first suggestion or sentiment default)
+    func selectPrimaryEmoji(from analysis: AnalysisResult) -> String {
+        return analysis.suggestedEmojis.first ?? analysis.sentiment.emoji
+    }
+    
     // MARK: - Private Helpers
     
     private func detectSentiment(from tagger: NLTagger, text: String) -> (Sentiment, Double) {

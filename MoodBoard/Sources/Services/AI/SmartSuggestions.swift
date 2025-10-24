@@ -153,7 +153,7 @@ final class SmartSuggestions {
         // TODO: Integrate actual Writing Tools API when available
         // For now, simulate API behavior
         
-        await Task.sleep(500_000_000) // Simulate API call (0.5s)
+        try? await Task.sleep(for: .milliseconds(500)) // Simulate API call (0.5s)
         
         var enhanced = text
         var changes: [String] = []

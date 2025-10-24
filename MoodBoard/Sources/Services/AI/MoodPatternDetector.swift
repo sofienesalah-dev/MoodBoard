@@ -293,7 +293,8 @@ final class MoodPatternDetector {
         var patterns: [Pattern] = []
         
         // Check if user is tracking moods regularly
-        let dayRange = calendar.dateComponents([.day], from: moods.last!.timestamp, to: moods.first!.timestamp).day ?? 0
+        guard let lastMood = moods.last, let firstMood = moods.first else { return patterns }
+        let dayRange = calendar.dateComponents([.day], from: lastMood.timestamp, to: firstMood.timestamp).day ?? 0
         let averagePerDay = Double(moods.count) / Double(max(dayRange, 1))
         
         if averagePerDay >= 2.0 {
