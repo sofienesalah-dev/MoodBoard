@@ -47,6 +47,9 @@ enum Route: Hashable {
     /// Feature 07: App Intents
     case appIntents
     
+    /// Feature 12: Apple Intelligence Integration
+    case appleIntelligence
+    
     // MARK: - Detail Routes
     
     /// Detail view for a specific mood (by ID)
