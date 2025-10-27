@@ -1,6 +1,6 @@
 # MoodBoard
 
-MoodBoard is a teaching-first SwiftUI app that walks through the process of building a modern mood-tracking experience. The repository showcases SwiftData persistence, MVVM architecture, type-safe navigation, and multiple Apple Intelligence integrations designed for iOS 17 and newer.
+MoodBoard is a teaching-first SwiftUI app that walks through the process of building a modern mood-tracking experience. The repository showcases SwiftData persistence, MVVM architecture, type-safe navigation, and multiple Apple Intelligence integrations designed for iOS 26.0 and newer.
 
 ## Highlights
 
@@ -22,14 +22,14 @@ MoodBoard is a teaching-first SwiftUI app that walks through the process of buil
 ## Prerequisites
 
 - macOS 14.4 or newer.
-- Xcode 15.4 or newer (iOS 17 toolchain recommended).
-- iOS simulator or device running iOS 17.0+.
+- Xcode 15.4 or newer (iOS 26.0 toolchain recommended).
+- iOS simulator or device running iOS 26.0+.
 
 ## Getting Started
 
 1. Clone the repository: `git clone https://github.com/<your-handle>/MoodBoard.git`
 2. Open the project: `open MoodBoard.xcodeproj`
-3. Select the `MoodBoard` target and run (`Cmd+R`) on an iOS 17 simulator or device.
+3. Select the `MoodBoard` target and run (`Cmd+R`) on an iOS 26.0+ simulator or device.
 4. Browse the experiences from the `FeaturesListView` landing page.
 
 ### Quick Preview Tour
@@ -46,7 +46,7 @@ MoodBoard is a teaching-first SwiftUI app that walks through the process of buil
 xcodebuild test \
   -project MoodBoard.xcodeproj \
   -scheme MoodBoard \
-  -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.4'
+  -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.0'
 ```
 
 Test targets `MoodBoardTests` and `MoodBoardUITests` cover critical components and core flows.
