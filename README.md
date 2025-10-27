@@ -22,7 +22,7 @@ MoodBoard is a teaching-first SwiftUI app that walks through the process of buil
 ## Prerequisites
 
 - macOS 14.4 or newer.
-- Xcode 15.4 or newer (iOS 26.0 toolchain recommended).
+- Xcode 16.0 or newer (iOS 26.0 toolchain).
 - iOS simulator or device running iOS 26.0+.
 
 ## Getting Started
